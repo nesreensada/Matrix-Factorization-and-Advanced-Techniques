@@ -1,0 +1,200 @@
+Welcome back,
+in this video we will continue Dr. Mobasher's presentation on
+Context-Aware Recommendation. >> So
+here's what I was talking about earlier with representational model using
+like Tensor Factorization, right? The representational approaches,
+for contextual modeling, there are two general set of approaches. One is based the tensor factorization
+I was talking about earlier, which you can kind of see
+here as an example of its, where you can see the users and items
+being sort of one dimension in the tensor. But then for each one of the contextual variables you
+have another dimension in the tensor. And these tensors can of course
+get very complicated and computationally expensive to factorize. Especially if you have many
+different context variables, the other sort of type of contextual
+modeling approaches that people have looked at our for lack for a better term. We have termed them conditional or
+dependent conditional modeling, which focuses on interactions between users,
+items, and contexts, right? So trying to actually model one of those. So I mentioned in context that
+were matrix factorization. That's one of the original
+approaches based on that idea. More recently these kinds of approaches
+have been extended to look at context as sort of and what we called so
+look at deviation base context modeling. And the idea there is that the way you
+model context by looking at hard ratings deviates among context or
+to the same item by sets of users, right? So what's really you're trying
+to learn is to what degree a particular contextual condition is
+relevant based on different ratings. People's ratings are for the same item
+in that context compared to let's say, the general case where you're
+not considering context. So that deviation is actually what your
+modeling and that ends up being relevance or equivalence to many of the other
+major factorization schemes and you can model more things with it. Another sort of approaches
+are similarity based contextual modeling where the idea is to actually
+model the similarities between different contexts in terms of how users
+are rating items in those contexts. And so this is, you can think of it as the other side
+of the deviation based modeling. But these approaches are very useful
+in dealing with very sparse data sets, because then you can focus on
+more general similarities about contextual conditions and
+actually group together certain contacts. When there may not be enough information
+in one particular set of contextual conditions because there are other similar
+ones that you can sort of aggregate together. So on the interactional side I talked
+about latent variable context models. The idea there is you have serve
+generative approach to modelling users' context where the assumption is
+users interactions typically, involves some of small rating contextual
+states, that explain the users behavior. All right, so please get back to this idea
+of the context not being observable but sort of conflict you know
+giving rise to the activity and the activities from changing the context. There are lots of domains where
+these ideas have been used. But they're particularly useful
+when you're dealing with situations where users are involved
+in some kind of an ongoing activity. Performing informational or a functional
+tasks or maybe listening to music, for example, in a playlist or in a streaming
+fashion, things like that, right? The basic idea is you got items and
+you got users and you got some ratings or observations
+about interaction with these users. And from these,
+you want to learn some set of latent factors that sort of
+describe these interactions. And these latent factors,
+you cannot associate them necessarily with some specific
+set of contextual variables. But, they're sort of hidden factors
+that describe what's really happening. And once you have learned these factors,
+then you can use them to do certain kinds of reasoning, right with the in most
+approaches probabilistic type of research. So one set of,
+a group of papers that sort of people have worked on including
+my own group along these lines was the idea sort of
+looking at particularly in the constant music recommendations but, also web page navigation. Look at the sequential activities of
+users and try to infer context and changes in context by looking
+at the sequence of activities. In the music recommendation domain,
+for example, you can think about a user
+listening to songs, and then interacting with those songs
+either rating them or skipping them. Kind of like in a streaming service and then being able to determine or
+identify potentially potential changes that might mean the big user has
+gone from one context to another context. And typically,
+the way we done this is through as I said late [INAUDIBLE]
+modeling by looking at the typical situation users engage in and
+how they might be associated with different characters,
+things that were attributes of songs. In one particular paper,
+for example, we look at extracting feature information,
+tag information from songs associated with a particular, let's say a playlist,
+this is a sequence of songs. And then mapping those the learning models in this case, we used latent application to try to find topic models, basically,
+from these tags associated with songs. And then each one of those
+topics then would represent sort of a potential context. And then you can look at how users go from one topic to another topic
+potentially as part of a sequence or song that they listen to and
+observe changes in those contents. The last thing I want to mention in
+here is the context interactive, or interactional systems or interactional
+context, is the actual context adaptation is situations where you're
+dealing with an interactive system where you don't necessarily have a lot
+of information beforehand, right? So we don't have, let's say, a whole bunch of other user information
+where you can use to build topic models, or probabilistic rate and
+variable models and so on. So, in this kind of situation,
+then you're going to need a more active learning approach, or
+kind of a reinforcement learning approach, we're each interaction give some
+information to the user, or to the system which allows it to build
+a more accurate model as you go forward. So you can imagine in the context
+of let's say e-commerce, maybe you are trying to buy a camera
+right, so you look at a bunch of different cameras but at some point you're
+done with that particular task. Either you purchased it or maybe you
+were going to come back to that and you start looking at toys to buy for
+gifts, right? So, when your in that
+particular context for buying a camera, presenting to you with
+a recommendation or the next item or predictive item as they lens for
+the camera, that might make sense, right? So in that case that's a good
+recommendation, but once you've switched to your task then the new context really
+represent the new utility function, so in that context recommending the camera
+lens is not going to make sense. And the thing is we want to be able
+to identify the changing context automatically. And the way we will do that is
+by sorting frame that hidden context will change the context. So there are different approaches
+people have been looking at and this most of this is fairly recent work,
+but basically it comes down to this sort of general scheme where, you know
+kind of in the normal on the left, you have this sort of normal
+recommendation approach. Where the system observing the user
+feedback, on particular items and getting user recommendations either
+they stand it, learn model, or based on some other criteria and all
+concepts of items etcetera, so the users. Back here, we want to be able to estimate the utility
+of items based on the user profile but we also want to detect if there's
+a change in context and if there is, determine the effect of that change and
+then update the utility estimate. Right? So this adds this new sort of additional path in here that you can try
+learn that in different ways. The current approaches that
+are being use to do this is, as I mention earlier, is based on this
+idea of exploration, exploitation, right. So, the idea is you're trying
+to maximize utility, and their recommendation means sort
+of giving the highest expected estimated expected utility the item
+that has the highest expected utility. And also, there's a reward and the reward
+in the context of recommendation might be the rating from the user, for
+example, on that item or feedback, like thumbs up or thumbs down. So you can imagine a system
+that interacting with the user, is recommend something,
+that user gives feedback, and that feedback is used to update sort
+of the utility function, right? And this is kind of a exploration
+exploitation approach, because at the beginning, the system
+doesn't necessarily known enough and might need to give a variety of
+different items to the user. Some of u which may not get the highest
+rating for example from the user but then it learns from that that's
+sort of the exploration parts. And after a while then it uses whatever
+it knows to give as a recommendation the highest utility item and
+then there's a trade off between these. And you can do more exploration,
+more exploitation, and vary between these. This is sometimes the techniques
+that are used to do this are based on what's to be called
+the multi-arm bandit approaches where you sort of modeling It
+tracks the users and at the system. As kind of like pulling arms and
+arms of a slot machines. So we have a row of slot machines,
+you want to see in what order you want to pull the arms that give
+you the maximum reward. And when you ask to sort of explore for
+a while and see which machine is giving you a better
+odds And then sort of pool that more. And then every once in a while, you switch between this exploration,
+exploitation to exploration. So a similar model. The difference is that you will
+also now have to worry about the change that might occur in context. So I want to just say,
+one quick thing about the evaluation. I did just talk about that a little bit. But there are some
+challenges obviously and recommendation in evaluating
+context aware recommendation. When you're dealing with
+the representation of framework for instance, one big challenge is
+of course data sets, all right? For offline evaluation, because evaluation require users to have
+rated the same item in different context. And this is not very common, right? So if you look at let's
+say a typical data system we use in recommended system research,
+movie lens for example and so on, people don't generally
+go back and rate the same movie. And then record the context in
+which they rated it, right? So there are increasing number of
+data sets that are not available for this type of research, but
+a lot of them are based on user surveys. So they survey user arcade. Did rate this item in this context,
+did you rate it in that context? Did you eat this food in this context, did
+you eat this food in the other context? And then compile those kinds of data sets. And because they're based on user service,
+they're typically small in size and of course, they're also usually very,
+very sparse, right? And so that's part of
+a challenge of doing this work. As I said, there's increasing number
+of data sets now available since that situation was improving. In a context interactional models,
+the challenge for evaluating recommendation is that
+context are not known in advance, right? We are inferring the context. So you can't, you can only indirectly measure
+the impact of context awareness, right? So, you may build, let's say,
+you may learn your latent variable models, and then incorporate that to those topics, let's say your latent variable models as
+part of your recommendation algorithm. But at the end, you can only measure, let's say the accuracy of
+the system as a whole, and maybe compare it to a system that doesn't
+do this on that particular approach. You cannot point to specific
+elements of the context. But it does allow you to do certain
+types of reasoning with these latent variable models
+that are not otherwise easy to do in the context
+of explicit representation. And it also allows you to deal with
+systems that tend to be more dynamic than knowing everything
+about context beforehand. So, I guess that's where I'll stop. I'll be happy to answer other
+questions that you might have. >> So, how do we, How of these system is
+distinguished between the stable aspects of a users preference and the contextual
+things that change from that? Maybe I've really like some particular
+actor but any given movie that their in, I might bore less depending
+on when I'm watching it. >> Right, so
+I mean that is exactly the challenge. So it's the modeling parts or the learning
+part in this contextual modeling is exactly what figuring out
+that particular question. So you have to, for example,
+it's entirely possible that you have different contexts that you have defined,
+right? But it turns out that's the users
+end up or the particular user for instance end up getting
+similar ratings to the item. Even doing their in different context. So the challenging context in that
+situation actually is irrelevant, right? And you find datasets or
+domains that are like that where having context awareness doesn't
+necessarily add anything to the system. And you would know that by
+doing that kind of evaluation. So compare the context aware version of
+the system with, let's say the standard non contextual version and that tells you
+whether some context actually changes. You can actually measure this by
+using statistical machine learning methods to identify
+combinations of contextual conditions where rating actually changes. All right, as result of that content for
+the same item. So that's third of easy representational
+approaches to actually being able to figure out by doing some analytics
+on the rating or preference data. And the interactional setting is
+a little more difficult because don't actually use some specific set of
+conditions you are comparing to each other but there you have to do things like,
+change points detection for example. Just to try to understand if there's
+some significant change in the users behavior in a particular,
+let's say session, particular portion of a session than
+let's say, previous portion of a session. So by looking at change point analysis, things like that,
+you might be able to the size with these. >> Thank you very much for being with us. >> Sure, thank you.

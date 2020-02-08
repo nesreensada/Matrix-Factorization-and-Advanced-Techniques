@@ -1,0 +1,138 @@
+Welcome back. In this module,
+we introduced matrix factorization and dimensionality reduction recommenders. And in this lecture, I'm going to
+focus on giving you an overview and the intuition behind these
+recommenders that will then dive into the technical details
+behind in future lectures. So we're going to get some motivations,
+some history and intuition, and really get the idea behind the algorithms
+that use dimensionality reduction. Including explaining what exactly
+is dimensionality reduction in the first place? And then later in this topic you'll
+get in to specific latent factors and the techniques for
+experimenting with matrix factorization, through the assessments and
+assignments that we have going forward. So, let's start with a really simple
+issue that we're going to face here. A ratings matrix is an overfit representation of
+user tastes and item descriptions. What I mean by that is
+that it's this huge matrix with thousands or millions of dimensions. But our tastes aren't nearly as complex
+as these ratings might suggest. So if I happen to like Hamlet and
+King Leer and maybe even I liked the book Shakespeare,
+the history and tragedies. That's not three separate
+opinions necessarily. That might be one expression of
+a common preference that I have for a particular type of play. And there may be tens or even hundreds of plays that I would
+like because I like that kind of play. Now, part of the challenge that we
+get here is computational complexity. When this matrix is millions by millions,
+or even hundreds of thousands, or
+tens of thousands by millions, it takes a lot of work to compute nearest
+neighbors and all of the other stuff. But it's also the fact that
+we might get worst results. When you suddenly start to
+interpret the idea that, look he didn't say anything
+about Richard III. He probably doesn't like that. Rather than recognizing, wait a minute
+Richard III is a lot like Hamlet and Lear. If he liked those he
+probably likes Richard III, unless we have other evidence. We're going to end up with poorer results. We're going to run into situations where
+we say, I don't know what to say cause I didn't experience this particular
+product, instead of saying, yeah, I didn't experience
+a yellow 9 by 12 legal pad, but I did experience a yellow 9 by 11
+legal pad, and maybe that's pretty close. So, in an ideal world. We would represent our tastes not in terms
+of the products we like and dislike, but in terms of higher level attributes,
+that I like things that are well built, and I like stories that are uplifting,
+but how do we do that? Well we didn't have to
+solve this problem first. The information retrieval
+community addressed this problem before we where even thinking
+about reccomender systems. They face the same issue when
+somebody built keyword vectors for documents and
+then keyword vectors as queries. This was a bad representation. You would type in a query saying,
+I'm looking for computer hardware. And it would find the word computer,
+or the word hardware. But if somebody said, I have
+an information processing mainframe, it didn't retrieve that, cause the words
+computer and hardware weren't there. Well, but
+they're talking about the same thing. They wanted to recognize concepts,
+not words. And they used a technique called
+singular value decomposition. To do this. At the highest intuitive level,
+what we're going to do is singular value decomposition is take a matrix. And reduce its dimensionality
+from all items by all users into taste dimensions
+that are much smaller. How many?
+We'll talk more about that. So, mathematically, if I have a matrix,
+this is a rank r matrix. On the left of the slide, with m. Users and N items, and
+it's a ratings matrix. For the moment,
+assume it's filled in, and later, we'll get into the details
+of how you might fill it in. I can factor that matrix into two rank R matrices, U and V prime. And a diagonal matrix S. If you're familiar with
+the linear algebra, this should be something you know. If you're not, it's not critically important that you
+understand how the factoring works. We're not going to ask
+you to implement that. But you might want to look at
+a general background article on SVD. But the magic thing about this factoring
+is that those values in the diagonal, s. Each of them, by absolute value, represents how important
+that new dimension is. In expressing the matrix R,
+more specifically, if I sort those values by
+decreasing absolute value and cut the matrix S off
+at some k dimensions. So I get a smaller matrix and
+in turn I cut off my user and
+my item matrices at K dimensions. So, I have a rank K set of matrices,
+and I multiply those back together. I get the best approximation I can get for
+this matrix in just K dimensions. That says I've compressed this matrix from some large number R
+to some small number K of dimensions where K is now the number
+of dimensions of taste space. That I'm exploring as I think about
+how to make my recommendations. So one way of thinking about
+this is if I can express every user's taste in
+a vector of k taste values and I can express every Items. Description in terms of
+the same k taste values. Then all I need is a dot product to
+tell you how much you're going to like each item. Let's go back to the intuition here. I'm going to go to movies. Because frankly I know more movies
+that I can use to go through this. If I started by saying my taste
+is each movie I like and dislike. I liked the Sergeant Pepper movie. I liked Forest Gump,
+maybe I didn't like Beaches. I can go through a long list of movies. I've gotta go through a complex algorithm
+to figure out whether I'll like a new movie. But if I could just say, hey, there
+are 12 dimensions of taste for movies. And here's what I think
+about each dimension. And if somebody could just say,
+here's a new movie. Here's where it fits on those dimensions. I would know whether I liked it instantly. Now, in an ideal world,
+those dimensions would be labeled. How much action does it have? How good is the writing? How motivational is the soundtrack? Unfortunately, the dimensions
+we're talking about are not that kind of user explainable to mention. The only way we're going to get
+these dimensions is through math, where we're coming up with dimensions that
+are orthogonal, unrelated to each other, and that are collectively optimal, but are
+generally completely not understandable. But once I've done that small
+bit of mathematical magic, I have a really nice way to
+think about recommending. And you might say where are those
+dimensions coming from. Or you might say wait a minute,
+how is this collaborative anymore. All you're doing is matching your taste
+profile against the item profile, isn't that what we did in
+content based filtering. And the answer to both
+questions is the same. This isn't content based
+filtering because the dimensions themselves come from the community
+of users and their ratings. The dimensions are not
+properties of metadata, they're properties of how people. Expressed their interactions and
+liking for each item. It's a hard concept but I think you'll
+find it it turns out to be useful and it will grow on you as you forward. So singular value decomposition And indeed
+many of the similar techniques we look at, reduce the dimensionality of our
+recommenders system problem. You get a small faster model,
+you get a richer neighboring network. I can be a neighbor with somebody
+that I have no items in common with, as long as we have commonality
+in our underlying tastes. So I like two of those Shakespeare plays,
+she liked three other Shakespeare plays. Suddenly the system discovers
+we like well written drama and we can be neighbors even though
+we've never read the same play. Now how many dimensions you get down
+to is really an empirical question. And you have to experiment. We did some studies with
+movies years ago and we found that 13 to 20
+dimensions was about optimal. More dimensions it didn't get better,
+it might even get worse. Movie tastes are pretty simple. If we were doing a domain that's
+more complicated you might have more dimensions. You might have 100 or or five hundred but any of that's a lot easier than having
+these matrices that have tens, or hundreds of thousands of dimensions
+as you go into rating space. And, then there are challenges. You know, we don't have a complete matrix. How can we factor it. We need to find a way
+to fill missing values. And we'll talk about that going forward. What about how expensive
+it is to factor a matrix? It is expensive, but we don't necessarily
+have to factor it every time, and in fact what we'll see is that there
+are more efficient ways of approximating factoring the matrix that don't
+involve a real matrix factorization. And what about the fact that
+these dimensions are just not things people understand? We'll talk a little later in the course
+about some attempts people have made to link factorization to other forms
+of content, like keywords, to try to come up with more explainable matrix
+based techniques for recommendation. So, take aways as we do this intro,
+there's this clever and useful approach. Where we can address our problems
+of synonymy, of different things expressing the same taste,
+deal with our problem of overfitting, get some computational advantages,
+at least at run-time. If we can build one of these
+matrix factorization or reduce dimensionality approaches. Now SVD itself is growing in use,
+but in fact some of the other approaches that we're going to talk about
+have come up to the point where they rival the item-item algorithm for the most
+popular algorithms being used today. You'll hear more about
+those in upcoming lectures. So we move forward, you're going to
+see a bunch of the details that come together with this,
+including how we prepare the matrix, gradient descent approaches, and
+probabilistic factorization. And we have a whole bunch of guest
+lectures later in this course that look at the next step as we hybridise matrix
+factorization with other techniques. I hope you'll find it interesting.

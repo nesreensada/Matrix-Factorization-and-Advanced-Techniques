@@ -1,0 +1,248 @@
+Welcome back. It's my privilege today to bring you an
+interview with professor Francesco Ricci. A professor or computer science from the
+free university of Bozen-Bolzano in Italy. And a leader in the field of
+recommender systems for a long time. He's done work in many areas
+of recommender systems. From work related to recommenders for
+groups to recommender fundamentals. And today we're going to talk specifically
+about context aware recommendation. He's also come to the field with
+a history of work in everything from case based reasoning. And other areas that bring AI into
+the field of reccomender systems. Including extensive work in user modeling. He was the program co-chair of
+the Second Recommender Systems Conference. And he's really one of the people who's
+been a formative leader in nurturing the field. Including many of the graduate students
+who've gone on to success in the field. So I'm delighted to have you. Welcome to our class Francesco. >> Welcome, thank you for
+the introduction. >> Well I am delighted to talk today, because our topic is
+context aware recommenders. And perhaps we should
+start with this question. Obviously, it's a hot topic. There are a lot of papers that are out
+about context aware recommenders. The last several years, every conference
+seems to have a workshop on incorporating context into these recommendation systems. Why don't you start by telling us, what do we mean by a context
+aware recommender system? >> Okay, let's start with some examples,
+so just to clarify the idea. So imagine that you want to
+recommend a vacation to someone. Obviously you have to take into account
+whether it's winter or summer vacation. Or the system has to
+recommend some purchase. And the system has to know whether
+it's a gift or it's something for you. Well, these two examples, as you
+point out, the importance of context. The first case is the period of time and
+the second case is the motivation for the recommendation. So essentially in general,
+this idea of context. Where a recommender system
+is coming through this. Understanding that context is in general
+any kind of information or condition. That can influence the perception of
+the usefulness of an item for the user. And for that reason, so since context
+is any kind of information this type. Recommender systems must take
+into account this information. In order to provide more precise and
+more, let's say, useful recommendations. >> So you've given examples like time or
+whether something is a gift. Are there some other examples
+of the kind of contexts that you think have been particularly
+important in recommenders recently? >> In general,
+there are several kinds of factors. I think that maybe we can
+show some examples, though. And looking at these examples,
+you may understand better what kind of applications have been developed
+using this idea of context. So let me show some slides. >> Okay, we see your slide
+here on a mobile application. >> Okay, so this is an example of a
+recommender system for places of interest. And we have here three of these
+snapshots of the user interface. And on the left, you can see that
+the user can select what kind of factors the system has
+to take into account. One producing recommendation. So for instance the distance from the
+points of interest, and the temperature, or the season, or
+even the companion of the user. And a user can select what factors have
+to be taken into account by this system. Then in the middle part of this
+slide you see the recommendations. The recommendations are customized
+based on the context. And, in fact, some of them are, let's say, considered by this system particularly
+[INAUDIBLE] for this specific context. So situation made with this icons where
+there is this [INAUDIBLE] green arrow. This means that this particular point
+of interest is the [INAUDIBLE] for the particular context of the user. And on the right you see also
+an explanation for that. So for instance this place is
+good to visit with a family. [INAUDIBLE] better motivate
+the user to take this recommendation and go for
+that point of interest. >> So this user might not get
+the recommendation of the cable car at all if they said, I'm coming alone. I'm not here with my family today. >> Yeah that's the point. This is particularly [INAUDIBLE] and could even not be shown to the user
+if in a different context. And this screen you see the possibility of
+the user to select contextual preferences. So to set some contextual conditions that
+are used by the recommender system to customize the recommendation. So in this case, the user can
+say whether it's calm or active. Or the system can collect some
+context from data like the weather, or the traffic conditions,
+or the type of the road. Based on these contextual conditions, the
+music which is recommended is selected. In a catalog of music tracks that are made
+available by the content provider. Okay, in these last snapshots
+from the user interface. You see on the left that
+the user can select [INAUDIBLE] the other users [INAUDIBLE]
+can say to the system. Please consider that there
+are these other passengers. And the system will recommend the music by balancing the preferences
+of the different users. By the way, you can even,
+let's say, preset. You can store some of these context
+recommendations or preferences, and you can create some
+customized music channels. And so, when you click on these music
+channels that are shown on the right. The system automatically will reload
+these context recommendations. And will produce music which is adapted
+to these contextual conditions. >> So, tell me, when you talk about
+these different contextual conditions. It seems like some of them are about
+an individual's preferences changing. Some of them seem to be about
+not necessarily preferences but what's appropriate for a situation. And some of them are external
+factors like groups. We talked with Tony Jamison
+about recommending for groups. So that one I think we understand. Do you treat things like am I happy or
+sad the same way that you treat things like,
+am I sleepy or awake? Or are some of those hard-coded
+by your system to say. If we know the person's sleepy we're
+only going to recommend loud music? >> They are treated in the same way. And so they are all context conditions
+that are treated the same way. What is not treated in the same way is
+this, let's say the group composition. This requires a completely
+different modeling approach. And probably Anthony told
+you about how to do that. In that case, for instance, in our application we did the kind
+of aggregation of recommendation. So we generate the recommendations for
+the different users. And then we try to find out the best
+aggregation of these recommendations. So this is also showing that the context
+recommender system called for a complete range of techniques. So in general, we particularly say that
+the model is a multidimensional model. Because the classical recommender
+system obviously is by dimension. And so the [INAUDIBLE] of users in
+the items, and add in the contextual data that I mentioned we have in the three
+dimensional and multi-dimensional model. And this is something that makes the the design all recommendations
+outlets are quite difficult to do. >> This multi-dimensional model
+seems to add a lot of challenge. It's already hard to do a good job
+recommending with the sparsity, in just two dimensions. What techniques do you use, to be able to
+handle the complexity of these contexts or recommendations in this more
+complicated multi-dimensional model. >> Yeah, in fact that one
+technique is very, very basic and try to go back to the big
+dimensional models. So they need us to, it's called this
+reduction method or for filtering method that, so the idea is that when we are
+under contested conditions, let's consider the ratings that have been acquired
+the exactly in the contested condition. Then you have a slice in
+this third dimension, and we just consider the way things
+are acquired in that specific context or condition, and
+we use a classical [INAUDIBLE] model. This is one approach,
+it's called pre-filtering approach. >> So with this pre-filtering approach, the major challenge is you just have
+less data for any given condition. But if you have enough data, you can use
+the same techniques that we've already been using for
+classical recommender systems. >> You are right. And in fact now,
+coming on some hybrids methods, instead of using exact pre-filtering
+try to say attitude their way things collect in their particular
+target contested condition. Some other way things are that
+have been collected in contested condition that run somewhat
+similar to the target blob. And then this idea of
+similarity can be tuned or can be identified according
+to different criteria. So for instance, you can say that
+to contest a condition is similar if it's influencing in a similar way
+the rating behavior of the users. This is something for instance that we have now presented at
+the last time at the conference enroll. >> So when you use your music example,
+might you say similar would be, I had many different
+dimensions I'm I happy or sad, I'm I driving fast or
+slow, if the data hits five out of eight of those is that enough
+to be similar that we might include those ratings, or do you only look at
+similar within each dimension? >> You will look at the similar
+in the effect of the conditions, so what I'm saying is that, for instance when you are sad you will tend
+to rate a certain kind of item lower but maybe you will have the same behavior
+when the weather is not good. And then we'll say that these
+conditions that are totally, I'd say not similar,
+they are not even compatible. They are similar from this point of view, in the sense that they influence in
+a similar way your waking behavior. >> So that requires a fairly
+rich model of user behavior. Yeah, yeah. All you have to let's say, analyze
+the data trying to find out this kind of similarity, which is typically
+difficult to do because again, your very fast about
+the rating theory of use. >> So are there other techniques
+that you commonly use for incorporating context
+aware recommendations? >> Yeah, and let me show slides
+where there is a summary of these, let's say, approaches. >> Okay, so on the left there is the diagram representing
+this contextual pre-filtering. So the idea is that data, reading data,
+that are let's say, multidimensional data, whether it's the user, the item,
+the contents and the rating. Using the context are let's say,
+you have this bi-dimensional model and so you have just the user,
+the item, and the waking dimension. And you generate the two dimensional
+recommender system that you could use recommendations. In the center part of this slide,
+there is this contextual post-filtering. This is even easier in some sense. The idea is that you generate
+recommendations by using all of the data that you have,
+even this contextual conditions. But after the recommendations have
+been generated using the context, you filter out those recommendations
+that are not applicable for the specific contextual condition. For instance, if you have a mobile application,
+you can generate recommendations for points of interested in general that
+could be interesting for the users. And then looking at the particular
+location of the user, you may detect that, the points of interest are too far
+from the current position of the user. I'm not good for the user. So this is post-filtering, after
+the recommendations have been generated. This is easy. The more complex and
+probably the most interesting modeling approach is depicted on the right
+and this is called context for modeling. Here in this case, let say the context
+is used inside their prediction model. So you need really to operate
+on this multidimensional data. And in order to do that particular
+approach is to use Danson's factorization instead of Martin's
+factorization which has become a very popular approach for
+evaluation recommender systems. And in this case you composed
+the multidimensional, data and you tried to build recommendations
+directly on the multidimensional data. >> This shows that once we
+start getting into context, either we need to be in a situation
+where we have lots of data or we need to have some fairly
+interesting modelling techniques. Which is a good reason to explain
+why context to where recommendation is one of these advanced techniques
+that is at the state of the art today. It does seem like a lot of what you've
+brought up has to do with mobile. Is that an area where we're seeing
+more and more of this context to where recommendations that
+are location were in particular? >> Yeah, I think so. Since that mobile applications in some
+sense provides a natural scenario for this kind of context that
+we're recommended systems. Users are mobile and there's a context of
+conditions that are changing in a very quick way, so you need the system to adapt
+quickly to the different conditions. So that's the reason why essentially we have a lot of application
+in the mobile world. Actually, I think that
+mobile applications also bring some would say,
+different kinds of context, so they put into the,
+it's another different kind of content. Because we have this, for instance the location of the user,
+which is called the physical context. But we have also with this mobile
+application some other dimensions. So for instance, the social context, the
+people that are around the user while he is mobile called interaction context and
+media context. So we are into [INAUDIBLE], the user is
+interacted with the system that is mobile, with the obviously limitations. So this again, calls for particular techniques for generating
+a personalized recommendation and also for adapting the interaction
+to the media context. >> Wonderful, well thank you for
+sharing this with us. Are there any other last thoughts or any pointers to sources that you'd
+like to share with our class? Yeah, I would like to bring more general idea about what context is,
+because we said contexts are factors that are influencing
+the perception of usefulness of an item. Therefore they recommend the system ask
+that they take into account that but actually to answer the reason processes
+of that users are performing. And I want to show you again
+an example just to illustrate how the context may be useful
+to call ambiguous messages. And this is there is this figure
+that is quite interesting. So on the left you immediately
+clearly see this ABC. Now you read this ABC. On the right you immediately read the 12,
+13, 14, no? But actually the B and
+the 13 are written exactly the same way. So the fact that on the left and
+on the right you read 13, it's based is essentially on
+the context of this two signs. So context is useful in order
+it's automatically used by our mind in order to, in some sense,
+decode this ambiguous messages. So this shows how important is context. And so essentially it's not possible to
+even interpret the meaning of certain items or recommendations without context. The context is always present. This makes sense from my point of view,
+we cannot build any more recommender systems without
+taking into account the context. It's a fundamental dimension we
+have that you can see there. >> Then tell us about that middle
+box when Ann approached the bank. >> Yeah, that's another example. I mentioned that when you read
+the sentence, Ann approached the bank, you think about a financial institution. I guess. But a bank has another interpretation. If you maybe had [INAUDIBLE] just a few
+seconds before, maybe you're not thinking about the bank but thinking about
+the weaver and the bank of the weaver. So the point is that what even you have
+thought, you have seen, let's say maybe a few seconds ago influences what the
+interpretation of the current messages. So this is for instance mainly
+important for music recommendations. The music that you have been
+listening to in the scene previously influences your preferences for the music
+that you will like to listen afterwards. And if you do not take
+into account this you will provide the very back recommendations,
+you maybe keep to recommend something as this recommendation will be
+coming boring for the using. We will not have enough
+diversity in the recommendation. Only B will create recommendation on
+top of the unrelated in the sequence. So this is again another
+example of the context condition which is not just the state,
+the location of the user but there's the items that have been recommended and
+are being used by the user before. >> Well, I think that's
+a wonderful set of examples. And it also points out that it's
+not just what happens before, but what happens afterwards. If you hear Ann approached the bank,
+the waters were near an all time high. You know it's a river bank. And if you play a particular song, and then follow it by a set
+of very fast songs. People may observed that the first song
+was too slow when they might not have felt that way if the song's progressed,
+more close in tempo. So that's a wonderful set of examples. >> Yeah, and I think this is also
+interesting when you take into account the point in time where the user is rating
+the items because normally the user is not rating the items immediately
+after let's say the consumption. But he's rating the items
+maybe some time ago. So even something that has been consumed
+after that it could have influence of their rating that the user provided for
+items that have been consumed before. That's also,
+I say shows how complex it is to generate meaningful recommendations
+by using this of ratings when you do not know anything about
+how these ratings are being collected. And when these ratings
+have been collected. >> Okay, well thank you for
+joining us and for educating us a bit about context
+aware recommendations, and we appreciate your willingness to
+join us in this experimental class. >> Thank you, Joe, for giving to me the
+opportunity to talk to your students, and all the people that are interested in
+context aware recommendation assistance. Thank you very much. [SOUND]

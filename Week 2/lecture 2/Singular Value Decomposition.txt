@@ -1,0 +1,143 @@
+Welcome back. In the last video, we introduced
+the concept of matrix factorization. And in this video, we're going to
+get into more details of exactly how this matrix factorization thing works. Particularly as it relates to linear
+algebra and we'll talk about how to deal with some of the issues of
+building up and applying this approach. So the singular value decomposition
+comes from linear algebra, and it's a way of breaking down
+a matrix into constituent parts. So linear algebra guarantees
+us that if we have a matrix, we can factorize it into three matrices. And this is called factorization because
+it works a lot like factoring numbers. You take 15, and you can factorize
+it into 3 and 4, such that, or 3 and 5, such that you multiply 3 and
+5 together, and you get 15. That's the idea of matrix factorization. We compute three matrices, P,
+I'll rewind just a moment. That's the idea of matrix factorization. We'll compute three matrices P,
+Sigma, and Q such that when we multiply them back together
+like this we get our original matrix R. As I said, linear algebra says
+we can get such a matrix, P is a m by k user feature affinity matrix. And that means in the terms
+of the latent features that we're using to describe preference,
+p each row of p, p sub u is a vector, that's a row of P. Each row of P describes one user's preference for
+each of our latent features. Similarly, Q is an item feature relevance matrix. Such that each row Q sub I, describes the features relevance for a particular item, each features
+relevance for a particular item. And then, sigma is a matrix of weights for
+each of these features. For those of you who have some
+linear algebra background, P and Q are what we call orthogonal, which has some useful properties
+that will enable some math later on. And also, as I said, linear algebra guarantees that this
+kind of a decomposition exists if R is a real matrix, which,
+for our ready matrix, it is. So, the SVD describes
+preference in terms of latent features that are learned
+from the rating data. So, we assume that there are some
+number of features, 50, 100, whatever, that describe or that can
+explain users' preference for movies. These features are not
+necessarily interpretable. We do not go in looking for a feature
+like, how much do users like animated? Instead, we select features that directly learn these features to
+optimize their predictive power. We don't care what the feature is or whether it's even
+possible to interpret it. We want the single dimension that provides the most predictive power for
+predicting what a user is going to like. And then accounting for
+the predictive power of that, we want the next most, and so on. This defines a shared vector space for
+users and items. The feature space. So previously, we have had vectors such
+as R sub U, which is a user vector. R sub I, an item vector, and
+R sub U is an user space. R sub i is an item, space. What we get out of the singular
+value decomposition is we get, P sub U, and Q sub I,
+both of which are in feature. Space. So users and items are both represented
+by these vectors that describe where they're positioned in
+the space of these latent features. So let's look a little more in
+depth at our different matrices. So we have R equals P sigma Q transpose. So P as we said is the user item,
+the user item affinity matrix. Our user feature affinity matrix, so
+we have users going down the rows, and we have features
+going across the columns. And unlike the rating
+matrix which is sparse, there's lots of values that are missing in
+the rating matrix, this matrix is dense. We know the value for any user, for any feature,
+we know the value. We infer the user's preference for
+every feature, and then that individual preference,
+we represent PUI to say that is the PUF that is the user use
+preference for feature F. So the Q matrix That is. Items. And features. So that and then it is flipped. So that the linear algebra works out,
+then the features go down the rows and the items go across the columns. But this expresses how relevant
+each feature is to the item. And as I said the features
+are not interpretable. But suppose one of the features roughly
+corresponded to animated science fiction. Then the P matrix value for
+that feature, let's say feature 12, would indicate how much a particular
+user likes animated science fiction. And then the q matrix value would express how relevent animated science
+fiction is to a particular movie. So for the Iron Giant which is an animated
+film about a boy who finds a robot. The value for animated science fiction
+we would expect to be high whereas, we would expect it to be relatively
+low for a movie such as pride and Prejudice, which is not animated and
+is not science fiction. So we have these two matices together
+that express how much is each user likes a particular aspect of a movie or
+type of movie. And then how much each movie or each item expresses that particular feature. Then our sigma. Sigma, that is a matrix
+of weights is feature. By feature. And it is also diagonal all of its
+nonzero values lie on this diagonal. Everywhere else it's 0s. And so instead of having to say sigma FF,
+we just say sigma F, and what this does, is it gives
+an overall weight to the feature, which says across the whole data set
+how important is this feature for predicting preference. And so, the way this works is,
+if we think of movies. So we've got our movies, and a whole bunch of movies, they exist. Or a whole bunch of items,
+we've got this blob. We've plotted out the the movies,
+are the items, or the ratings in this kind of a blob, what
+we look for we want to find the single vector or line that most predicts,
+what's going to happen with the rating? And so
+this blob it's kind of elongated and it's going to look like that,
+the first line. Then we're going to look for
+the second one and it's going to look about like that,
+and so on. These are the values that we're learning. So we're taking the data
+from our original space and we're basically learning a different
+way of representing it that keeps as much value as we can,
+as much information as we can. Now, we don't necessarily want
+to keep all of the values, if we do just a native singular
+value decomposition of the data, we're going to have K singular values. I will call that K star singular values,
+and this is what's called
+the rank of the matrix. Now we're going to say take k largest. All others become 0. Then we can truncate our matrices,
+chop off. All of this, we can chop off all
+of the the columns of our p and q matrices, that correspond to singular
+values that we're are getting rid of, we get much smaller matrices. Also linear algebra that this
+is the best possible rank k, what's called the rank K approximation
+of the matrix, under the squared error. And it also chops away a lot of noise
+because users are noisy in their ratings, or in their purchasing behavior. And so it's a reasonable assumption
+that the most important features are capturing true signal, and there's
+lots of random variation away from that. But as our features become less and less
+important, what they may be doing is just modeling a little bit of random behavior
+off in some corner of the ratings matrix. So, by getting rid of those,
+what we do is we get rid of the noise. And then we keep the stronger
+signals that are more useful for generating predictions and
+generating recommendations. So with that we get to
+our prediction rule. So predicting a rating, we do by multiplying
+the user preference value, the item relevance value, and the the weight, the singular value. And if you push through the matrix
+multiplication of our three matrices, taking into account that the fact
+that the sigma matrix is diagonal, this is the rule you get out. Often before we compute the singular
+value decomposition we subtract a baseline predictor. Often B sub UI equals the global mean, Plus the mean of the items, the items normalized values and then plus an item specific bias term. And then, so then what we do to score. Is we add, we take the baseline and we add back in the prediction rule
+from our singular value decomposition. To actually compose the matrix. I have R. What is P, Q, sigma? We don't know what any of those are. So the way we can get that is many
+linear algebra packages such as Matlab, R, SciPy the LINPACK and
+ARPACK libraries etc. Provide ways of decomposing matrices. If you are in the owner's track you'll be
+using a java matrix library to compute the decomposition in
+the programming assignment. This has two downsides. Big upside we don't
+have to write the code. Two downsides. It's very slow and
+it requires a complete matrix. So R, we're given R we want to compute P,
+sigma and Q. It assumes we have all of R,
+all the values of R. Well, we don't have all the values of R. If we had the user's rating for every
+item, we could just use that to recommend. So we need to fix that problem. So there's three ways we could do that. One, is we can impute values. We can assume a baseline prediction for
+the missing values. Another one that's very
+computationally useful is rather than assuming these
+baseline values what we do is we subtract the baseline from
+all the values that we have. So we get RUI or
+the normalized one equals RUI minus BUI. For some baseline,
+user mean, item mean, etc. And then we decompose. Our normalized matrix. We assume the missing values,
+then, are zero. This is really useful, because it
+lets us use sparse matrix packages, such as the sparse matrix
+support built into MATLAB. Directly in order to compute our
+singular value decomposition. In a future video, we're going to look at
+a way to do this decomposition that just ignores the missing values. Then, we have another issue. So, suppose a new user
+come into the system. They rate a few movies, they buy
+a few things, they click a few links. We want to do recommendations but
+they weren't in the system yet last night when we cooked our model and
+this is an expensive process. Even the fast methods are on the order of
+hours with a large data set train a model. So what we can do is
+a technique called folding in. Where we, so we have our decomposition. R equals P sigma Q transpose. We have the ratings matrix or
+the ratings vector for a new user, RU. Want PU. P sub U. Well, we can solve basically what we
+can do is we can solve this for P. So what we get,
+we have R equals P sigma Q transpose. We can multiply both sides by Q. RQ equals P sigma Q, transpose Q. Since Q is orthogonal, this is 1, or I, the identity matrix. So, we then get RQ sigma inverse equals P. Sigma's a diagonal matrix. Inverting it is not very difficult. And so we can take the rating, the user's
+new rating vector, multiply it by Q and the inverse of sigma and we get their preference vector, so this allows us
+to take new data for a user, folded in. We can also take a few ratings for
+an item, fold them in as well and get the item's feature vector. This only works when we do
+an algebraically correct SVD because it does rely on the fact that
+P and Q are orthogonal matrices. So in conclusion, SVD provides
+an algebraically robust way to infer and model preference. That as we talked in the earlier video is
+related to the concept of basic values or we can see it as kind of accrued
+mathematical way of expressing the psychological concept to basic values. Down side is that decomposing
+these matrices is slow. In the next video,
+we're going to look at how to fix that.

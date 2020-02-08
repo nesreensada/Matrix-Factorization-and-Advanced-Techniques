@@ -1,0 +1,224 @@
+As you may remember from our course
+introduction in October 2006, Netflix announced to competition
+with a million dollar prize for an algorithm that could beat its existing
+Cinematch algorithm by at least 10%. I'm happy to be speaking
+with Yehuda Koren, a key member of the team that
+won the Netflix prize in 2009. Dr. Koren is now staff research
+scientist at Google in Israel. At the time of the Netflix prize, he was a
+researcher at AT&T Labs and then at Yahoo. Yehuda, welcome to our course. >> I'm glad to be here. >> So let's start at the beginning. Could you remind us about the nature
+of the Netflix Prize Challenge, and what your team's first
+effort was at solving it? >> Yes, this bring some good memories. So it happened in October 2006, Netflix published a dataset
+with one other enumerating step that the center
+of the real customers, half million customers
+gave to too many thousands of movies over the six preceding years. And at the time,
+it was considered a used dataset. It was a game changer for many of us, and it attracted a lot of attention as
+probably thousands of researchers and practitioners was started
+play was the data. The goal that Netflix has put is to
+improve the accuracy of the Cinematch system by 10%. And 10% was measured on an error metric
+known as RMS root mean squared arrow, where they want us to
+predict the score for each user and the movie in the test set. And the two-way thing is a star
+rating between one and five. So imagine their two way thing is
+false stars and I predict 3.5, and the square,
+they're always is 0.5 squared. And they have read overall writings, and the requirement was that
+there would be around 0.85. And this was very tough. I think no one realized how difficult it
+is to reduce the error to this level, otherwise, people won't participate. It took almost four years
+to achieve this level. But I say, I believe that like everyone
+will optimistic at the beginning that we can close this in few months. And then, by the way,
+we were totally strangers to the field. But I think that
+the nature of the dataset, the fact that it deals with
+more of which everyone is familiar with got us really excited. And we started counting the data. What we did in the beginning
+was white standard. I'm coming from computer science. I was working on graph algorithms, so
+I said, okay, whatever, big graph. This is not the best presentation,
+of course, but it's a graph connecting users with movies,
+so I think this is naturally related to
+what's known as Megawood methods. So let's optimize them, and let's see if
+what I wanted to do in the beginning. I definitely chose to find longer range
+interaction between notes in the graph. I ended up tuning the Megawood methods so
+they optimized the RMS in metrics. So when we tried to predict a rating for a movie from other ratings for
+similar movies [INAUDIBLE], the weights we give to other
+movies will not be arbitrary, but will be driven by some
+optimization method that it's supposed to be good
+at optimizing the RMS. I was working then at AT&T, as mentioned,
+I was working mostly with Bob Bell. Bob is a statistician,
+who was working with the other approaches. He used PCA,
+which is very similar to singular value decomposition and-
+>> PCA means Principal Component Analysis. >> Yes, Principal Component Analysis, and
+this was, you can see an that its an early version of message authorization which
+became really popular in this competition. And so you asked at the beginning, so metric book factorization came up
+as a big factor in analyzing and decrypting the Netflix Prize that is set. And a key to using metrics
+factorization was to address only the existing
+entries in the metrics. So we have a matrix with 500
+rows corresponding to users and almost 20,000 calls
+corresponding to movies. 99% of the endless in
+the matrix are missing. And if usual incident component
+analysis of a singular varied composition will address all
+entities, which is how to scale. And also, not a good idea for this specific metrics that
+we were competing on. And we learned in gradually
+starting with PCA, which was treating all
+entries in the matrix. And so essentially, it is transposed
+in that, it is training as movie by movie metrics by
+multiplying it with its transposed. So this PCA that Bob did got combined with
+the enabled methods I was working on. The combination yielded some good results. This was I think the first
+two months maybe. So another major component
+was understanding the data, what we call the global effects,
+residing in the data. Global effects are like the average
+score that the movie receives. Some movies are just better than others. And you can say with confidence that
+the good movie will get the high rating without knowing anything about the writer. [CROSSTALK]
+>> Some people just like movies more than others. >> Yes, exactly. That's the other side of the coin. And some people also are less
+critical than others and tend to give higher ratings. So if it was unknowing nothing
+about the movie, just say for this writer,
+then anything is going to be high. So this is just that,
+I call it data cleaning because you say, okay, let's remove these effects, and
+try now in a model of a cleaner data. So this was the big part of
+what we did in the beginning. And by the way, later on,
+we stop doing this, because it was better to have these
+effects baked in into the model. So the model is part of
+learning the Megawood model or the methods factorization model
+also land most of these passes. But in the beginning, we didn't realize
+this and we were cleaning the data. And cleaning the data is important,
+in general, I always advise it. >> Great.
+>> So these were small steps. >> Let's jump ahead for a minute. >> Yeah.
+>> Because we could take you through all the steps, but over time,
+a bunch of different teams that were competing seemed to come
+to the same realization. That the techniques they were
+using were making progress but they weren't going to get
+them to this magic 10%. And they seemed to figure out
+that the key to solving this challenge was to find a way to merge
+together the different algorithms that each had different strengths and
+weaknesses in to some composite algorithm. How did that insight come about and what was sort of the general high level
+approach that pulled everything together? >> Yes, I said this is probably the one
+thing that people decides matrix factorization. I think, yes,
+people remember phonetics competition, the insane number of predictors
+that we have used which is a shame. [LAUGH] No project assistant should use so many predictors, and so
+this happened gradually. I was walking with Bob, with Chris, and the most effective way
+to walk in parallel is, each one has its own predictor,
+and then we just combine them. So, I mean the alternative would be
+to really isolate what is unique in what Bob is doing and
+what's unique in what I'm doing and then find the single predictor,
+combining the merits of both. And this is very difficult, and far less effective than combining
+predictors, so this was reality. And as you move on, you are generating
+more and more predictors, I think after a few months, we have ten
+predictors, we thought that's a lot, so now we need to be systematic
+about how we combine them. So, we use linear regression to
+find the best linear combination of all predictors,
+some of them could get negative weights. But I was fortunate to work with
+a statistician like Bob that ensures that we are not overfitting that that's
+it, that the training said too much. As time went on, I mean we
+accumulated more and more predictors. And then yes at some point, it became
+apparent that we are not looking for the romantic key insight or key
+algorithm that wins this competition but we are looking for
+a big combination of methods. Because no single elegant method
+can beat a combination of many methods that cancel out
+the noise inherent at each predictor. I mean, people got more
+sophisticated about blending not only using linear combinations, but also
+non-linear combinations with neural nets. And the thing is,
+this is not very important in practice. I should say, also, that in reality,
+nothing in the competition said that. One can get almost all benefit using, I
+believe three algorithms blended together. So what did make a difference? At the end, was in hindsight. I mean, using different models was for
+matrix factorization together with methods and Boltzmann machine
+is this kind of neural networks. Each modelling has its own uniqueness. And blending different methods
+together is very helpful. Besides this,
+I think if was really finding some unique effects that
+reside in the data. Not like the anchoring effect,
+the fact that all ratings given in the same
+day then to be interrelated. People have good writing days and
+bad writing days. And this is a very slow
+effecting the data. And if you don't model it no
+matter how many models you blend, you're not going to hit
+the required precision level. And then there are some
+subtler effects like it's very important to know how many
+items the user rated in a given day. This is just something in the Netflix
+that it might be an artifact. Maybe it represents the fact
+that at some point, Netflix asked user to rate many items,
+maybe some people tend to rate in batches. But this has a profound
+effect on certain movies, was that they were being rated alone or
+as part of a big batch. So all this was key to
+the progress that we made slowly. That's why it took several years, because these effects were hard
+to find and unexpected to us. Another thing that was important, and I think this was the key to
+our focus in the first year, well not only after the rating value but also after the binary
+matrix of who rated what. Just knowing to model that
+a user is going to rate a movie. It is saying a lot about a user, whether this user is the type
+that rating that movie or not. So, this is in some sense an easier
+data to predict because it's binary. We only care about whether
+they're rating or cared or not. And this was another surprise for
+us and it was integrated into the model and also was critical
+in imputing the precision. >> And certainly one of the things
+this gave was a way for somebody who had a hypothesis. If somebody thinks, gee,
+movies on Sunday might get happier and therefore higher ratings. They could build a very simple predictor. And if it had any value, then mixing
+it into this ensemble could show if it had incremental value without having
+to solve the whole problem themselves. If they could just find little
+things that added incremental value, there was a framework to build that value. >> Yes, yes, where the human
+distributed the computation this way. I mean, we could split
+the work among seven people, each of them is working
+independently at the end. There is a single blending algorithm,
+it was very convenient and effective. It was over-used certainly. >> But it was also sort of recursive in
+that, if you think about how recommender systems work, instead of finding
+the perfect data, we find lots of data and a way of combining it in the hopes of
+giving you a good prediction [LAUGH]. >> [LAUGH] That's a good point. Yes, so this is crowdsourcing
+at two levels at least. >> Yeah, absolutely. So the folks in this course, our learners,
+have heard me talk a lot about the Netflix prize, both about the fact that it
+was over-optimizing the wrong thing. That error measures for things people
+rated is not actually the most important business question for
+a company like Netflix. But also, the fact that it brought
+significant machine learning research effort into recommender systems. From your perspective, looking back,
+how has this prize and challenge changed the field both for better, and
+if you think it has at all for worse? >> I think it changed the field for
+better certainly. But I totally agree with what you say. I mean I did this because I was
+motivated by the competition but maybe matters a little
+bit to Netflix because this shows actual predicted rating
+to people [INAUDIBLE]. But in all scenarios I saw It
+doesn't add much value, and it's not even correlated with
+[LAUGH] with the real metric. So it's, first of all, ranking,
+even if we talk about accuracy. I mean you hinted that accuracy metrics
+in general are not the most important, which might be true. But I mean for us, data people,
+that's what we know to do. So product decisions might be much
+more important but this is beyond us. But even in and
+ranking metrics whether we rank the top five items correctly we get
+the user Five items that are relevant for him or for him is much more
+important than [INAUDIBLE]. RMC is not measuring it well. I can give an example. The big revelation of
+this conference was that as we should practice sponsors
+with the [INAUDIBLE] only. Only the given ratings. I think it depends on the log before and we viewed it as the wrong port because
+we did SVD on the dense metrics. But then later I published
+a paper that for [INAUDIBLE]. The simple dense SVD on the dense
+metrics is working much better for the real ranking problem. So yes it's,
+I think there is the [INAUDIBLE], metrics is misguided in several ways. And community, including me,
+was obsessed with it for several years. But this was fine. I think one year after
+the Netflix competition people started publishing
+about other methods. About learning to rank,
+about diversification metrics, about all sorts of method. I think there is still a lot of work
+to do in finding the right metric. And being obsessed about other for several years still bought
+a lot attention to the field. Many good researchers, tons of papers, many sessions in conference and
+spawned books. It made the field popular,
+which is very good. And in my eyes, the competition was a big positive
+boost to the computer systems field. >> Well, it certainly grew this from
+a field where people would get together. You'd have 150, 200 people. And suddenly, it was 400, 500 people. That adds a lot of
+diversity of techniques. So what about you personally. What effect did being out there and
+labeled as one of the people who won this challenge have on your own research
+directions, your own research career. >> It had a big impact on my career. First of all, for
+more than two years that's what I did. [LAUGH] I was obsessed
+with this competition. Otherwise you cannot win it if
+you don't invest full days for years on this apparently. And then I was I was of the view a graph
+visualization researcher before. It totally changed my
+research directions towards data science which I am
+finding fascinating. That's what I am doing since then. And not only working on a problems, but problems that involved modelling and
+analyzing big data. That's what I am doing and
+so this Netflix competition really changed my career and
+defined what I am today. >> Wonderful,
+I guess the last thing I will do, is give you an opportunity if
+there's anything else you would care to share with us from your general
+experience with recommender systems. >> Okay so we mentioned metrics before. >> I'm sometimes frustrated about metrics,
+it's very hard to design metrics. It totally captures the of
+the like to popular items. Sometimes it's good, sometimes bad. So I'm still looking for
+people to come out with good, with ways to measure the quality, the user impact of systems. And beyond this, I think it's worthwhile
+to remember that in real life, each system has its own challenges. Practical optimizations and tuning of systems are always
+tailored to the specific data. This is always posing
+unique challenges and opportunities that
+are interesting every time again. >> Yeah, this is also why we love
+doing live user experiments and A/B testing and field studies. Because so many things you can measure but they
+don't always predict what people will do. >> Yes. >> And the challenge of saying, yeah,
+these are objectively better but they still might not be better
+when the user gets them. >> Yes.
+I see it again and again. The offline metrics
+are misleading us every time. >> Wonderful. Thank you so much for joining us and we will remind people that this has been
+an interview with Yahuda Coren at Google. See you next time. >> Thank you.
+[BLANK AUDIO]

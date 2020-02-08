@@ -1,0 +1,227 @@
+Welcome back. In this video, we're bringing you
+an interview with Xavier Amatriain from Netflix to talk about learning
+to rank and problems with doing recommendation in situations where
+users are clicking and viewing things. And not necessarily providing
+a lot of explicit ratings. Xavier, welcome to the course. >> Thank you, great to be here. >> So
+what does Netflix do with recommendation? >> Okay, so for
+those of you who don't know, Netflix is a online streaming service
+where pay monthly fee and then you get access to a whole catalogue of videos
+that include movies and TV shows. Our whole services and UI is kind of designed around
+the concept of recommendations. In our case, more than 75% of what people
+choose come from our recommendations. And, as a matter of fact,
+as opposed to many other service, for us, search is a much less important concept. We think of search as that thing that
+people do whenever we're not good enough in giving them recommendations. And again, other 75% to 80% of
+what people watch on Netflix comes from our recommendation algorithms, which mean that they're very core
+to our business proposition. >> So
+can we see an example of this interface? >> Yes, sure, so
+first let's look at some of these slides. And let me start by saying that Netflix
+works on many different devices. We have hundreds of different devices. But the basic idea here we're seeing,
+the iPad interface, for example. But the basic idea is always the same. We have rows and
+we have ranking in the rows. And if you think about it,
+this introduces two different concepts and two different ways to address
+the recommendation problem, which are key to our service. One of them is how to select those rows. And those rows usually represent a genre
+or a mood we think the user might be in. And then, the other one,
+which is core to what we do, and what many recommendation systems do,
+is the ranking, right? It's how do you select, and how do you sort the items that are going
+to be presented in each of these rows. And again, what we're seeing
+now is the web interface. But if we go to the phone,
+for example, and you look through the actual interface,
+the concept is basically the same. You still have rows which
+have been selected and then you have items in the rows
+that have been ranked. And of course, the number of items that you capture in a screen depend
+on the device and so on. But the basic idea is the same. It's rows and then ranking in the rows. So if we go into one of these rows,
+for example, we have rows like the top ten row, and
+that's one of the rows that we usually pin on the top of the page and
+we try to select only ten items. Those ten items that we think are most
+representative of what the user might be interested in watching right now. There, we introduce concepts like
+introducing diversity and freshness. We also have other rows like popular
+Netflix row where, in this case, even though we call the row popular
+Netflix, it's also personalized. So as a matter of fact, all the rows that you'll get in your
+home page are going to be personalized. The ranking is going to be personalized. And even each of the rows that
+you're getting, the ones that we were talking about represent some
+genre or some mood you might be in. They're also personalized. And they respond and you can see that on the left of each
+rows here in this screen capture. They respond to some implicit or
+explicit feedback, things that you've watched before or things that you've
+told us that you usually like to watch. And again, they're also personalized. And that's why, as I was saying in
+the beginning, over 75% of what you're going to end up watching comes
+from some sort of recommendation. >> When Netflix presents
+a recommendation to a user, what is the goal of that recommendation? What response did you want the user or experience you want the user to have
+in response to a recommendation? Yeah, so that's a very good question
+that gets us to the core of, what are we trying to optimize when
+we build this recommendation system? And the basic idea is, when we're
+presenting something to the user, we're trying to get the user
+to watch something. And that might seem trivial,
+but there's a lot in there. And for example, we're not only trying
+to get the user to click on the item. But we're trying to get the user engaged
+in something that is interesting, at least for a long time. Meaning that the user clicks on it and
+continues watching for some time. And in some sense our systems and
+our algorithms we're trying to do, is to optimize the amount of hours that
+the user engages with the service, right? And that means that we're presenting
+thing the user likes, the user, of course, clicks on, but
+then continues to watch for some time. And the reason we do that
+is because we know that correlates very well with one of
+the business, a core objective, which is to retain users over time, right? We're not only interested in
+tricking you into clicking something that you might not like. We're actually trying to
+optimize overall a long period of time how many hours
+you're going to be watching. And that gets us, again,
+to the objective function that we're trying to optimize when we build
+these recommendation algorithms. >> So I don't hear anything about
+rating prediction in there. And a lot of the algorithms
+that we've looked at so far in this course,
+they start by trying to predict ratings. And even if we're going to recommend
+five items to the user, we do so by predicting ratings or otherwise
+estimating the preference for each item. And then just picking the five best ones. >> Yeah.
+>> So does that work for the goals you're trying to optimize? And if not, why isn't it adequate or
+appropriate? >> Yes, it's a very good question, because we've been working on recommendation
+systems at Netflix for a long time. And we've been there, and by been there, meaning optimizing the predictive rating
+was our core metric some time ago, specifically when we presented
+the Netflix price right in 2006. Now the key idea is that,
+what we were trying to optimize there was different because our service was
+different in that at that time, we were actually doing DVD by mail. And that's a very different service
+where people were actually putting a lot of thought into deciding what they
+wanted because they were going to receive it two days afterwards. And they were trying to think, what
+will I want to watch during the weekend? And then they put a lot of effort
+in giving us some good feedback, because they knew that that was going
+to influence what we were recommending. Now in our case right now, what we've
+seen over time is that the quality of the explicit feedback
+that we get has gone down. For many different reasons. First of all, people don't engage too
+much in giving you explicit feedback when they're in the service where they can
+very quickly change their decisions. And that happens when you're
+in a service like Netflix, where you have instant streaming. If you start watching something and you don't like it, what you will
+do is switch to something else. You won't stop, give us a bad rating, and
+then try to make another decision, right? So the process becomes very different. You don't put so
+much effort in giving explicit feedback. You assume that your actions and what you're doing there
+are informing the system. And what we've seen over time is that
+we get less explicit feedback, and the explicit feedback that we get on
+the ratings is also worse quality. There's an added problem here that
+we have in services like Netflix, where we have an account that actually
+represents a whole household. And there, what we see is that the kind of
+feedback that we get through the explicit feedback is sort of a mix of what
+the different people in the household get. And it's actually worse than a mix. We might have the adults in the household
+trying to rate all the kids content very lowly because they want it to go away. But of course, the kids want to
+watch that, so they will go and do a different thing. And for example, kids are known to
+be very bimodal in their ratings. And many of them will actually only give
+five star ratings to what they watch. They will either not rate or give. And overall, the quality and the coverage of our explicit
+feedback has gone down. On the other hand,
+we now have a ton of implicit feedback that is very good and we can
+use an our recommendation algorithms. So that's not to say we don't use ratings, but first of all, we're not optimizing for
+ratings because that's not our goal. Our goal is not to understand what is the next thing you're
+going to be rating highly. Because, for example, and
+that's another important issue, you might rate highly foreign films and
+documentaries. But that's something that you
+only watch 10% of the time. And you still think they're very good. But 90% of the other time, you're going to
+be watching just an easy comedy because you're tired after work, and all you want
+to do is to relax and enjoy some time. And you will maybe rate that lowly but
+you still, five days out of the seven of the week,
+you're going to be watching something that you consider is not very good but
+it's entertaining, right? >> Yeah, I find that a lot myself, that the five star ratings
+are serious dramas or high art films. And most of the time I want a four star
+action movie if I just want to have fun in the evening. >> Exactly. >> So the goal, it seems,
+is to blend the likelihood that the person is going
+to watch something. Either gross popularity or
+in some personalized fashion, with personalized factors like what
+particular things that they want to watch. How do you go about doing this? >> And that's exactly, I think,
+a good way to think about it. If you think about the ranking
+problem in an abstract sense, and you want to build a very,
+very trivial ranking algorithm. And you go into a room and you say,
+hey, build a ranking algorithm for these people that you don't know, the best thing you can do is take
+popularity as your baseline, right? You look at your service,
+you take the most popular items, and you present the same items to everyone. Because chances are that if you pick
+the most popular things, you're going to be covering a good percentage
+of the people that are in the room. Because by definition, popular items are
+those that most people tend to enjoy or watch, right? So popularity is always a very
+good baseline to think about when you're starting a ranking problem. And then, the key thing is, okay, what can I add to that popularity
+that makes it more personalized? Because of course, popularity is
+the opposite from recommendation and from personalization, which is what
+we're trying to get at, right? So think about it this way. What do we have at hand that can help
+us personalize a ranking signal? And as we were just talking before, rating prediction might be actually
+a very good signal to use. So we can now blend popularity, which is unpresonalized, with the rating
+prediction signal that we've been working on, I know, for
+a good part of this course. And take that now not as
+an objective function, but actually as an input feature to
+our ranking algorithm, right? A good way to think about it is think
+about this as a two dimensional space, right? Where we have popularity of a movie in one
+of the axes, and the predicted rating for a given user, of course, because that's
+personalized, on the other axis. And we need to build a model that
+actually combines those two things. So, the simplest thing we can
+do is think of a linear model. And this linear model is going to
+be combining those two features, the popularity of a video, and
+the rating of a video, given a user. We're going to be giving some
+weight to those two components, and there's going to be a bias term. And that actually defines a line in
+this two dimensional space, right? If, depending on the weights that
+we are going to give to w1, w2, that's going to have a different slope,
+let's pretend that it has this slope. And now what we can do is, all the items
+that we have in the two dimensional space, we can project them
+into this linear model. And they will fall
+somewhere into this line. And that actually end up
+defining our final ranking. So we basically put those projections
+into two dimensional space or basically just evaluating the score
+given the values and the weights. And then finally, we sort the items
+according to those scores. And that gives us the final ranking. So again, this is a very simple approach
+to building your first ranking model. It's a linear model. We're using these two different features. One of them is giving you the baseline,
+which is the popularity, which is very good baseline to have and
+to think about. And then another personalized feature
+in this case, the predicted rating that you've built, however you built
+your rating prediction algorithm. And all that is left now, and
+it's not a trivial thing, and it's the learning to rank problem, is how do you determine the weight you
+give to each of those two features, right? We had the w1, the w2,
+those are the relative weights that you're going to give, and the question you have
+to answer Is, in my particular case, is popularity more relevant than predicted
+rating, or the other way around? What's the relative merit of
+each of these two features? And of course,
+the key issue here is you should let the data you have speak for
+itself, and build some learning algorithm that is able to determine those
+weights by looking at the data you have. >> So how might we go about
+learning these weights? >> So there are many ways, but the simplest approach would be to treat
+this as a classification problem. This is the socalled [INAUDIBLE]
+approach to Learning to rank, right? So basically instead of building a ranking,
+treating it as a ranking problem, we might treat it as a classification
+problem where we have two classes. The positive examples, so
+into one class the positive examples and the negative examples and
+we basically tried to learn that function as a function that separates
+the positive from the negative examples. So one simple approach to this would be
+using something like logistic regression. You're treating, and logistic regression, some of you might know is
+a regression algorithm in which by using a logic function you're converting it into
+a classification algorithm. And the basic idea here is that you have
+your positive examples which are going to be the things that people click on, or, in
+our case, the things that people watched. Your negative examples, which
+are the things that people didn't watch, and then, you train your classifier
+to try to optimize the function that separates those positive examples
+from those negative examples. In the process of creating
+your classifier by using some iterative algorithm like grading decent or
+similar one. You are going to be determining those
+weights in the linear model that are actually defining that boundary
+between the two classes and that what you're going to be using
+then to determine the score for your ranking function. So basically the simplest approach is to
+treat that as a classification problem and use something like logistic regression
+to learn the linear function and that's a linear approach. Of course there's other ways to learn or
+classify that are nonlinear, and you can go into using decision trees for example, in a similar way,
+as you would do with logistic regression. >> So if I have some data of,
+say, movies people watched, and didn't watch or
+started watching and stopped real soon. And popularity data and predicted
+rating I could put that into R and ask it to give me a logistic
+regression over the popularity, the predicted rating to predict
+whether they watched it. And that would let me start experimenting
+with this recommendation technique. >> Exactly, yep. >> So if people want to go do more
+reading about either this approach or more sophisticated approaches to
+this problem to experiment with or trying their own systems,
+what should they go looking for? >> Yeah, so I think the key word
+that they should be looking for is learning to rank any particular
+personalized learning to rank. There's different approaches that
+go from the para wise approach to learning ranks to more
+advanced list wise approaches. And now why is the classification
+approach not good enough in many cases? The classification approach
+has an issue which is that, would you optimizing when
+you're lowering your algorithm is something like log-likelihood
+which is not a ranking metric. Ideally what we would want to do
+is optimize some ranking metric that really represents your problem. And ranking metrics like NDCG or mean reciprocal rank or
+fraction of concordant pairs, those are more related to what
+you're trying to optimize. The problem with those metrics is that
+they are not differentiable, they're hard to optimize in a grading dissent scenario
+and then you have to be smarter about it. And there's a lot of smart people
+doing research around this topic. So I recommend you look into learning to
+rank para wise and list wise approaches. I think In the course you might also get a link to a block post that I have
+where I go through some of this method and on some pointers to some of
+the reading that you might be interested in if you are interested
+in those more advanced approaches. >> Yeah, and a link to that post
+will be in the course readings list. >> Okay, good? >> So, thank you for joining us. >> Thank you very much.

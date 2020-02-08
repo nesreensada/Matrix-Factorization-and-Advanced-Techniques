@@ -1,0 +1,120 @@
+In this module, we're going to be talking about
+a general case of learning recommenders. So many algorithms are built directly
+from some algorithmic structure and insight into what might produce a good
+recommendation, such as find items similar to ones the user likes or
+decompose the matrix for latent features. And then we use metrics to to
+evaluate how well the algorithm did. But there are many other algorithms,
+including many modern algorithms, that use the metric directly in the process of
+building up the recommendation algorithm. And what they do is they
+learn the best recommender, within a family, for
+some particular metric. We've already seen this when we looked at the FunkSVD matrix factorization method, where we directly learned matrices Q or
+P and Q to minimize, Or have least a squared error. So what we want to do here is see
+how we can generalize that approach to many different kinds of
+recommender algorithms. The structure of learning a recommender
+algorithm is expressed in this formula. So we have theta,
+which is the set of parameters and or recommendation model, but
+often its a parameter such as for the FunkSVD the theta is
+going to be our P and Q matrices, That are going to be used to
+produce the recommendations. And then we have this function,
+sum function, which is either the error or the utility computing predictions or recommendations using a particular
+model and parameters. And what we do is if g is
+an error function then we compute the theta that minimizes g, argmin means find the theta for
+which g of theta is smallest. If it is a utility function that is it's
+high when the recommendations are good, rather than high when there's lots of
+errors, then we want to maximize g. The approaches are equivalent. It's just a matter of whether we're
+looking for the smallest error or the largest utility. There are three components of
+these kinds of algorithms. There's a model,
+such as matrix factorization or linear regression, or nearest neighbor. The model generally has some parameters,
+theta, the coefficients in a linear model,
+the matrices in a matrix decomposition. And the model, plus the parameters, produces the recommendations
+of the predictions. We then have a utility function or
+a loss function that measure how good or bad our output is with respect
+to some training data. And then we have
+an optimization algorithm that uses this to find the best parameters. And they're organized like this. So the green boxes are the pieces
+of this whole puzzle that we select as a part of the process
+of engineering the recommender. We have some model,
+let's say matrix factorization. And it has some parameters, PQ. Now the model will take the parameters and it's going to produce some output,
+predictions. The loss of utility function compares
+the output to training data ratings. And it computes how good or bad the output
+is with respect to the training data. The optimization algorithm
+takes that loss/utility or utility function and
+computes a new set of parameters to try. And we iteratively generate output
+using the model and parameters, measure how bad it is,
+improve the parameters, until we are satisfied with the parameter
+values that we have chosen. As we saw in FunkSVD,
+this is often through some kind of a convergence criterion, a threshold on
+how much the parameters are changing, or just we're going to train 40 times,
+100 times, whatever. But these pieces work together
+to let us train the algorithm. For a simple example, we can look at
+estimating ratings with a single value. So we have our scoring function is
+going to be predict the rating with a single global value. So our parameters are the value B. Our error function we want to
+minimize the squared error. So we, the G is going to be
+the sum over the users and items of the error, which is
+the rating minus this baseline value. Now with this problem,
+our optimization algorithm is, look up that statistics
+tells us that b equals mu. Now we have the best value. There's not a lot of
+sophistication to the training. But the basic principle is there. We want to find the value
+that minimizes the error. Now this approach can be applied
+to many different kinds of models. We can do a bias model, which takes
+a global bias, mean rating, and then per user, per item, biases. And effectively what this gives
+us is a personalized mean. How much better or worse are you
+going to like this item than average, adjusted by how much better or
+worse you like items, on average. And in this case,
+the parameters are going to be b, b sub u, for every user,
+b sub i for every item. So if we have, 1000 users and 500 items, then we're going to have 1 plus 1000 plus 500 = 1501 parameters. That's a lot of parameters. If you want to apply the gradient
+descent approach that we saw in FunkSVD,
+that's 1501 derivatives. Fortunately, they all
+follow common patterns and a lot of things are going to be zero. But the parameters explode
+pretty quickly here. You can also use a linear regression that takes some features of users and/or
+items and puts them together in this linear combination in order to
+produce our scores, in which case, we want to learn the coefficients for
+each of these features. Or we can do matrix factorization,
+which we've seen worked out in detail, where we're learning matrix,
+or learning matrix values. We may also include the baseline values
+themselves in our learning process. So we've got these different models, we
+can then apply them to different metrics. We can look at prediction accuracy
+metrics like we've seen, RMSE, or simplifying that to the sum
+of the squared error. We could optimize for classifier accuracy,
+accurately classifying things as good or bad, consistent with
+the user's preferences. We often model this as what's
+called a logistic regression, which is a linear regression that's
+wrapped up in the logistic functions, that it's good for
+predicting boolean values. We can also optimize directly for
+rank accuracy, where we want to optimize the results of ranking to
+put good things towards the top. This generally requires some extra
+intermediate steps in order to actually make that optimizable. We're going to talk more about
+that in one of the later videos. And with the model and the error metric, then we need an optimization method. Gradient descent is very,
+very common in recommendation. It's also sometimes called
+steepest descent or ascent. There's another algorithm called
+expectation maximization that can also be used. Any optimization method for
+finding the best values, given a utility function may be applicable and some are
+going to be easier or harder to apply to different kinds of error functions and to
+different kinds of recommendation models. One common theme in a lot of
+these is they do use derivatives. So a lot of them need the derivative
+of the loss of the utility function in order to compute updates, because
+most of these are iterative methods, where they start with a guess for
+the parameters and then they see how bad the recommendations
+are with the guess and iteratively improve the parameters until
+we get to a minimum value for the error. To do this, we usually need to be able
+to take the derivative of the error. This makes it hard to optimize error
+metrics that aren't differentiable. So sometimes what we'll
+do then is we'll find a differentiable approximation
+to the error metric. Many different algorithms
+can be framed in this way. And to do this,
+we need to determine a quality measure. How are we going to judge good as
+far what the algorithm has produced? Then we need to devise prediction
+recommendation model and determine its parameters. We need to map all this to an optimization
+method that's going to find the best parameter values. We need to train, test, cross-validate, measure how good our final
+train recommender is. And it's useful to have a smooth
+differentiable error response that we can plug it into our learning algorithms. This approach is the heart of supervised
+machine learning, which is where we're trying to learn how to predict a bunch
+of examples that we have classified, such as things the user bought or ratings. Many modern recommendation methods are
+built on these principles, and it's a very general approach that can result in
+a wide array of recommender designs. Training these kinds of recommenders
+can be an expensive process. This iterative process of
+computing recommendations, measuring area and
+improving the parameters can take a while. And how interpretable the outcome is,
+how explainable the recommendations are, depends heavily on the model design. Some are going to produce very
+explainable recommendations. Others, it's going to be a little
+harder to explain to users where the recommendations came from. But the end resulting recommenders
+can be extremely effective.

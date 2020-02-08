@@ -1,0 +1,262 @@
+Welcome back. In this video we have with us Dr.
+Bamshad Mobasher, who is a faculty member at DePaul University and has done
+a variety of recommender systems research projects over the years, including
+a number on context-aware recommendation. He's also involved in the ongoing
+leadership of the ACM Conference on recommender systems, where you can
+find a lot of current research on many aspects of recommendation. Barnshad, welcome to the class. >> Thank you. >> So, we've talked a little bit in
+this class about, that there exists a concept of context, and that it makes
+a difference for our recommendation. What is context and how can we take it into account when we're trying
+to provide recommendations to users? >> Okay, well, let's just begin with
+the way that context is emerging in a lot of different applications that
+are being used in information access. So we are seeing that increasingly, As people access more complex
+types of information environments, where there's lots of
+different types of items, or there's lots of complexity in
+the structure of the types of navigation that can occur in these system,
+there's more need for guidance. And, of course, this is sort of
+a general reason behind having more information filtering in,
+recommender systems are a part of that. But one thing that people are seeing is
+that when you're searching for items, or when you're trying to navigate and
+access the right piece of information, often your preferences is
+just part of the picture. There are other aspects of your
+interaction, either with the environment or with the system,
+that are relevant that could be useful as part of sort of focusing and honing
+in on the right piece of information. Just what you see in here, for
+example, is Yelp, the kind of things that you might be looking at when you're
+searching let's say for a restaurant. Obviously, in this case,
+it's in a particular location. But if you look at the bottom in here,
+you can see that you have specific selections for different neighborhoods. You have things like this is good for
+kids or good for groups. So these are elements that go beyond
+not just general preferences but also take into account the current
+situation of the user as well. Just to extend that example a little
+bit let's take a look at say Spotify, or your typical music streaming service or
+recommender system. And you have typically things like genres,
+artists, albums, etc. But as you can see in a lot
+of these applications, the kinds of things that sort of take into
+account the user's current environment or situation also are coming in,
+like the user's mood, for example. Are you in a good mood or a bad mood or
+a sad mood or a happy mood, et cetera? Are you doing a workout or are you, let's say, studying or relaxing,
+or something along those lines? Is this music that might be good for
+traveling? So a lot of these things
+that you see in these systems are trying to take that
+situational awareness into account. In the context of recommendation,
+context also that's coming in, and part of that is predicated
+on the assumption that your preferences might change if you go
+from one situation to another situation. So, for instance, if I'm the movie,
+Frozen, for example, I may just dislike it if I'm trying to watch a movie by
+myself so I may not rate that very highly. But, if I'm watching it with kids, you
+know, then maybe that's a good movie for that particular context, and
+in that context I may rate it highly. So this sort of points to the idea that
+you may have different preferences or even different ratings for
+the same item but in different contexts. So let me just get to this couple
+of definitions of context. By the way,
+there are lots of definitions of context. You can find literally thousands
+of definitions of context. And I know because I tried earlier, and then you know they come from lots of
+different domains, so that's a part of it. It's not all in for recommendation. But I picked a couple of them because
+they sort of underlie the two general directions that people have
+looked at context in computing, both in ubiquitous computing and
+mobile computing. And nowadays in recommendation. So one of them is this definition by Dey,
+and some of his colleagues, which basically says that context
+is any information that can be used to characterize
+the situation of an entity. So, this points to the idea
+of situated actions. That actions of an entity and agents
+are relevant in a particular situation, and the same actions maybe, for example,
+have a different relevance, or utility, in a different kind of a situation. So this says something about
+context having something to do with the interaction of
+user with the environment. The other definition that kind of points
+to sort of the other side of the spectrum on how people view context
+is this one by Lieberman and Selker back in 2000, which says that
+context is everything that affects computation except its explicit input and
+output. So it's pretty general, but it does
+suggest that context is something that's independent and
+outside of the entities actions. So that's to some extent
+this is in contradiction to the other definition
+that I just pointed to. But you really get at two
+separate aspects of context and both of which have sort of found
+their way into various systems. You can still sort of think about
+the first definition saying that context is something that is intentional
+that is not observable directly but it's part of interaction. And the second definition sort of
+saying that context is extensional. That means there is some specific
+set of factors, or whatever, outside of just the normal input and output that
+independently describe what context is. So this led to debates about context in computing, and famously Paul Dourish,
+2004, distinguished there are two views of context along these
+two lines that I was just describing. One was referred to as representational
+view, which says that context basically can be represented explicitly
+using some sort of variables that are observed and are distinguishable
+from the underlying activity. So things like location and time, very sort of things that you
+can actually point to and measure. The other view is sort of this
+interactional view of context, which says that the context is defined
+dynamically as part of the interaction. Context sort of gives rise to the activity
+and the activity changes the context. So there's kind of a mutually reinforcing
+relationship between those two. And, again, that independent
+does not necessarily observe some sort of variables related to that. So the context can be
+represented as an explicit numerous sort of static attributes. This is the representational view. Again, things like time, and location,
+or mood, or device, for example. Things that have been typical, typically
+used in context the word, computing. In ubiquitous computer or
+mobile computing. An application, of course, there,
+is that the relevant contextual factors or variables, and their structure,
+have to be known at design time, right? So you have to say, okay,
+yes, you have items and you have ratings,
+users have general preferences. But in addition to that, we have some kind
+of contextual variables, like time and location. And other things that define the context
+and we know what these factors are before? So that's how some designing
+implications for systems, obviously. And of course the information
+about the instantiation of these variables have to then
+be acquired by the system, right? So if location is one of your
+contextual variables and your system needs to be aware
+of it's location, right? Like the GPS for example, or
+some sensor devices that find that. Something about time or
+something about let's say, there are some other aspects of contexts
+that may have to be deciphered, or extracted in other ways,
+possibly explicitly by the user. So, when we're talking about the
+representational context, then the context might look something, a user profile
+might look something like this, right? So we are typically used to in
+the traditional recommender system domain seeing a user rating matrix which
+has let's say, users as rows and items as columns, and then you got
+the ratings associated with those items. So you can think of that as
+a cross product of users and item, being mapped to space of ratings,
+in some scale. And those ratings could be explicit
+ratings, or implicit, preferences, etc. In a context-aware situation,
+then you have these other, at least in the representational framework, you
+have these other attributes or factors. Things like time, location, companion,
+lets say etc, as you can see in here. And the same user might in fact have
+shown different preferences for the same item across
+these different contexts. So, if you look at this table for
+instance, it gives you an idea what type of data we are dealing with, when
+dealing with representational context. You have data that involves user
+preferences, but those user preferences also include information related to
+a whole set of different contextual, pre-specified contextual variables
+like time, location, companion. And what you also see in here is that
+when we talk about context in this sense, in this framework, you are talking about some specific
+combination of these variables, right? So one context would be seeing the movie
+Titanic on a weekend in a theatre with your family, right? That combination is one context,
+each one of those individual variables are some contextual variable or
+factor associated with it. So, In the representational domain, I should say by the way that
+most of the work in context of a recommendation has focus in
+this representational framework. So people assumed that you already have
+some pre-specified set of contextual variables again,
+like time and location etc. And most of the systems
+that people have built or algorithms people have came up with, then have followed three different
+general architectures, if you will. One is contextual prefiltering,
+the idea there is that you have the data, the kind of data that we
+were just looking at. But then you sort of filter that data. So if you want recommendations that
+are relevant to a particular context, you filter only those ratings that
+are relevant to that particular context. So once you've done that, then contextualized data is just
+then users' items and ratings. But it's a subset of all of their ratings,
+right, you're focused on a particular context. Then at that point, you just use a
+standard recommendation algorithm, right? Like k-nearest neighbor,
+matrix factorization, etc. And you give recommendations. The fact that those recommendations are
+context aware is simply because you have filtered out all of the other contexts,
+right? So that's kind of an idea
+of contextual prefiltering. And part of the drawback in that kind
+of approach is, of course, often in recommender systems, we are dealing
+with datasets that are extremely sparse. So this even makes thing more sparse,
+right? >> Yeah.
+>> So that could potentially be a problem. Postfiltering is sort of
+the other side of the spectrum. So the idea there is that you have
+datasets with a different context, initially you ignore the context. You sort of build your recommender system
+and then you give recommendations. But your recommendations
+are the ones that are post filtered based on relevance to
+a particular context. And there are different ways of trying
+to figure out what that relevance is? This is a typical approach that a search
+personal organization uses, right? So you sort of personalize a search,
+you take into account relevance, and you give a set of items
+back based on a user's query. But then afterwards,
+you re-rank things based on similarity, let's say, to some profile of the user. A more systematic approach
+is to actually incorporate context in the learning process, right? So when you build your models, when
+you're trying to learn the models that allow you to make predictions,
+you actually take into accounts the context itself as part
+of the learning process. And this something's called
+contextual modeling. And I guess I would say the bulk of the
+work that's been done in recent years is really in this,
+kind of the last column there. So let me just circle back and just briefly also talk a little
+bit more about interactional view. So the difference here is that
+we don't necessarily know, we don't observe some set of variables
+that tell us what context it is? We don't necessarily know the location,
+we don't necessarily know the time, space, etc. And, in fact, there are some domains where
+those are not necessarily the relevant things, but context, maybe it is
+a task that you are performing, right? And the way context is then understood
+is as part of your interaction. If I am, let's say,
+navigating a particular website to perform a particular task and
+then I'm done with the task. And I move on, and start navigating
+another part of the website, to perform a different task. Those really should be seen as two
+different contexts, in a sense, right? And the only thing that tells me
+that this context has changed, or that there's a difference between those
+two, is user's interaction itself and possibly the interaction of other users in
+the same environment in the past, right? So in that sense context is not
+observed but it could be inferred, possibly kind of as a stochastic
+process with a bunch of states and those states representing
+different contextual conditions. So, this has its own set of challenges,
+right? On the one hand, the benefit is that
+you don't necessarily need to have some pre-specified set of contextual
+variables And therefore, if later on after you've designed your
+system, other variables come into play. You don't have to change the design
+of your system, it's more dynamic. On the other hand, you never actually cannot point directly to some set
+of conditions that says, okay. This set of variables with these
+values are the current context. You have to sort of or
+be able to infer this. So these of course lead to
+the different types of systems and different understandings of
+what context awareness means. Generally, you can also think about
+characterizing the environment for context-aware recommendation. And how context itself changes, right? So it's representational
+framework I was telling you about, you could think about a situation,
+the context is fully observable, so everything is known about the context. And the context itself is static,
+and doesn't change. You could also have partial observe,
+partially observable context. You could unobservable context, the kind
+of the situation was just describing, where there is latent knowledge
+of context that you infer, but you don't observe it directly. And furthermore, the context can
+either be static or dynamic, right? So it's good change or it could always be the same sort of either latent factors or some specific observable
+factors that describe conflicts. So it can also kind of
+the idea of conflicts and how it factors into the design of
+systems among these two dimensions, that tell you a little bit about
+what you can do about that? So, There will be a lot
+of work on different kinds of contextual
+recommendation algorithms. Some extensions of standard collaborative
+filtering where some of the earlier models things like pre-filtering approaches
+that we described based on user and item splitting, the idea that you
+would sort of treat a user, for example, as multiple users, given that they may have rated the same
+item in different contexts, right? So their rating different contexts would
+sort of be treated as different users. And then you apply the standard two
+dimensional kind of recommendation algorithms events. Same thing with item splitting,
+so the other dimension. Differential context modeling
+is an approach where you try to identify some subset of the most
+relevent contextual variables and then maybe associate different weights
+with them, as part of the model process. There's some heuristic approaches, they're
+the distance based, and most of these of course, if you know what context variables
+you're dealing with, would require also similarity or distance matrix
+specifically for those dimensions, right? So how do you compare, for
+example the order time dimension versus the location dimension versus
+than lets say mood dimension. Some can be more complex than others
+that you would have to define specific similarity or distance metrics for
+each one of those approaches. The more recent approaches
+are primarily based on matrix or extensive factorization. The idea there for example is, to be able to destroy rather than
+looking at the user item matrix, you look at a more general tenser which
+include context sort as other dimension. And then you do factorization
+of this tenser and then use those factorized matrices
+to make predictions kind of like you do in a standard matrix factorization,
+except you've got an extra dimension for each of
+the contexts that you want to model. There are other extensions of
+context where matrix factorization. There's also some work on factorization
+machines which allows you to explosively sort of represents
+different contexts and dimensions kind of in the same
+key dimensional space, right? So we can think about users and
+items that's being two dimensions and the different contexts could be all
+different additional dimensions in the same table, and then you sort of
+build a factorized model based on that. Most of these that I named up to
+this point are sort of assumed this representational framework, right? Where you know what these
+contextual variables are. When you get to the interactional
+framework then you're dealing often with probabilistic
+latent variable models, because you have to sort of
+infer context by finding out for example what those,
+trying to look at data from let's say large number of users or
+possibly some external data. Let say by social media data, etc. Or some content features
+associated with items. And then be able to extract latent
+variables that might describe different kinds of contexts that
+users are interacting with. If the context is not completely dynamic,
+then you may have to use active learning approaches based
+on exploration, exploitation. And in fact, we have done some
+recent work in this particular area where the system sort
+of learns as it goes. And the idea of active learning and standard reinforcement of learning
+has been around for a long time. The new bit in here of course is to try to get the system to understand when
+there is a change in context. So, the system layers and layers and layers of data, has a model that
+sort of is learned over time. But then it may have to retract a portion
+of that if it notices a change in context, because some of the things that were
+learned are not relevant any more.

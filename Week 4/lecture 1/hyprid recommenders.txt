@@ -1,0 +1,86 @@
+In this module, we're going to talk
+about hybridizing recommenders. So far we've focused primarily
+on individual algorithms. One means of computing our scoring
+function or our ordering function. But different algorithms have
+different strengths and weaknesses. A collaborative filters work really
+well when you have a lot of data and where the items are relatively
+interchangeable. Content based filters allow you
+to function even without a lot of user interactions around an item. In practice, we often combine multiple
+recommenders in order to try to capitalize on the strengths of different algorithms
+to produce better recommendations. If you're taking the honors track you've
+already seen this a little bit in the previous, Rewind a moment. If you're taking the honors track you've
+already seen a little bit of this back in course two with one of
+the assignments where we had you run a hybridized version of your recommender. So for a very quick example,
+a warm up example, collaborative filters train
+on ratings answer a question. If the user watches the item,
+will they like it? We don't have ratings for
+items the user didn't watch. And most of the items they didn't watch,
+they're less likely to like, because most people under most
+circumstances don't run out to watch something they expect
+they're not going to like. There are exceptions of course,
+but ratings are selected high. There's a different
+question that we can ask. Will the user watch it in the first place? And popularity is a really good
+first pass approach to this. So we could blend popularity with collaborative filtering to try
+to capture both of these ideas. Will the user watch it, and
+if they watch will they like it? And try to recommend things that the user
+is likely to watch and enjoy watching. So how might we do this? There's several different ways that
+we can hybridized recommenders. We can combine item scores,
+we can combine item ranks. We can integrate different types of data
+into a single recommendation model and there's many other ways we're
+going to see that more in some of the later videos in this module. One of the simple ways is a linear
+blend of multiple algorithms. So if we have, We can build our scoring function
+out of two inter scoring functions. And then we assign blending weights,
+these betas, to say how much we want to
+value each recommenders' input. Oftentimes, we'll have an offset
+just as the starting point for a nice linear model. We can 3, 4,
+500 different recommenders that we put in. The Netflix prize, a challenge that
+was run a number of years ago, the winning algorithm of that was a blend
+of over 100 different recommenders. So we can do this kind of
+a linear blend of scoring. This is common and it's simple. We can extend this beyond just looking
+at constant coefficients to say, the coefficient is going to be function of some characteristics of the user and
+or item. And this is called
+feature-weighted linear stacking. So machine learning, we sometimes
+call these linear blends, stacks. And the feature weighted one, means that
+weights can change based on the feature. One really common feature to
+use in changing the weight is the number of ratings for the item or
+the number ratings by the user. And this allows us to create
+a hybrid that emphasizes a content based filter when the user or
+the item doesn't have very many ratings. And as the more ratings are available for users and items, it shifts the emphasis
+over to a collaborative filter. And it allows the blend to take into account
+the fact that different algorithms are going to be relatively
+strong or weak in different situations. These models are also very
+related to a family of statistical methods called
+hierarchical linear models. We can also combine item ranks. Where rather than blending our s function,
+like we saw here, we blend our O function. And a few ways we can do this. We can mix ranked output. We can convert ranks to positions or
+percentiles and treat them as scores. This works really well for
+blending and popularity. So to do that we can, say if we've got two recommendation lists A, B, C, D, E, and B, D, A, C, E. And then we can say that the percentile
+rank here is we've got 1, 0.8, 0.6, 0.4, 0.2. A = 1 + 0.4. B = 0.8 + 1. C = 0.6 + 0.4. Excuse me, A is 1 + 0.6. D = 0.4 + 0.8. And E = 0.2 + 0.2 which is 0.4. So our final recommendation
+list is going to be B A, D, C, E when we rank them
+in decreasing scored order. Which B likes,
+one recommender puts B at the top, and the other puts B number 2. Putting B first makes sense. A is at the top in number 3 so
+putting it second makes sense. We've got D which is at 2 to 3,
+C 2 to 4, and then finally both agree
+that E is at the last. So that's one example of how
+we can do rank blending. We can also integrate models. Several matrix factorization techniques
+can take into account both rating and content data. And this isn't hybridizing algorithms, so
+much as it's hybridizing types of data. SVD-feature factorization machines and
+generalized probabilistic matrix factorization are all examples
+of algorithms that can do this. Common pattern in some of these
+algorithms is that in additional to assigning latent future
+vectors to item characteristics. So we have, Our Pu which is the user
+feature profile vector. We've got qi,
+which is the item latent feature vector. We'll also have some other, we'll call it y sub k,
+for some characteristic k. So it might be that you've got
+a particular latent feature for music albums from a particular label, or from a particular producer, or artist. And that allows us to get additional
+information about what latent feature are going to be in play, and
+share latent features across items that are related by some
+identifiable characteristic. And then there's various other ways you
+can envision putting feature data or content data together with rating data or consumption data into
+a single kind of model. In conclusion,
+mixing recommenders can let us capture the strengths of multiple different
+kinds of recommender algorithms. There's many different structures
+that we can do with this. And, for some of the details, for
+example, we have this linear recommender. We need to find weights. The next module is going
+to be very relevant for the details of optimizing those weights,
+and actually computing the best values to
+use in our hybridization strategy.

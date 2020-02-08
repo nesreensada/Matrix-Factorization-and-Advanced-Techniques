@@ -1,0 +1,182 @@
+Welcome back. In the last video, we talked about how to use the singular value decomposition
+to decompose the ratings matrix. And then use that decomposition to compute
+predictions that can be used to recommend. We noted two problems with this approach. First, computing the singular
+value decomposition is a slow and computationally expensive process. And second, the singular value
+decomposition algorithms require great care in dealing with missing data. Because the formal definition of the SVD
+depends on having a complete matrix. In this video, we're going to look at
+an approach that is much faster and deals well with missing data. The key insight to this approach
+is to look at the error of computing recommendations
+using the SVD. As we noted in the previous video, the
+truncated singular value decomposition. Where we take the SVD and
+we only keep the top k, say 40 or 100, features by their singular values or their importance weights,
+and just drop all the rest. Linear algebra tells us this
+is the best possible rank-k approximation of the original matrix. And this should sound
+a little bit familiar based on the metrics that we had talked
+about in the previous course. As far as comparing the predictions
+to the actual users' ratings. And it turns out that the definition
+of best that is used for this notion of the best rank-k approximation is
+something called a Frobenius norm. Which is effectively the global
+RMSE in recommender evaluation. So when we have an error
+function such as RMSE, there's a lot of techniques we can use
+to directly optimize such functions. Search for values parameters
+that minimize errors is a very common optimization process which
+underpins a lot of machine learning. So what if we just found the best rank-k
+approximation instead of going through the computational expense of
+computing the SVD formally? And if we do this,
+we don't know what the error is on all of the ratings that are missing,
+which is most of the ratings. So what if we just ignored them and
+found the best rank-k approximation for the ratings that we have? Could we directly search for matrices that
+have the least error in this structure? Turns out that yes, we can. The approach we're going to be talking
+about in this video is just one of several. But it's called gradient descent,
+which is a convex optimization method. So if we have some error function that's
+convex, this lets us find the values that have the least error, or
+inversely, the greatest utility. We're not going to cover all the details
+and nuances of gradient descent here. Multivariate calculus is
+not a prerequisite for understanding this course. But we're going to use it and
+cover some of the basic ideas, so that you can understand and apply it in
+a few kinds of recommender situations. We're specifically going to be
+using a variant called stochastic gradient descent. And the basic idea of this is that we make a guess as far as what
+our decomposition should be. And then we look at the error of doing
+rating predictions using this guess. And then we use that error combined
+with the derivative of the error to tell us how to improve our prediction. So the basic idea,
+if we draw a simple function, looks about like a parabola. So we've got x, we've got y. What if we wanted to find the value of x,
+where y is the least? And we know it's here. But suppose we wanted to find that value? What we could do is we could take a guess. We're going to guess that
+axis somewhere over here. We can compute what's the value of y at
+that x and then we take the derivative. And the derivative is
+going to be this line. And we look at the derivative,
+we look at its slope and we say, the nearest available minimum. If we go this direction,
+then our y value is going to get smaller. So let's go and
+try another x value over here. And then we'll look at its y value. And we'll keep going until we
+finally get at that minimum value. And effectively, and
+this is just in one dimension, this generalizes to many dimensions. And effectively what happens
+is the derivative or the gradient serves as
+something at a compass needle. Except rather than seeking magnetic north,
+it seeks the high point or the low point. And we just follow that needle
+until we get to a point where there's nowhere
+we can go that's lower. That's the basic idea of what's
+going on in this approach. There's two benefits of this. One, it's pretty fast. Two, as I mentioned,
+we can just ignore the missing data. We don't know what the error is over
+all of the ratings we don't have. But, the ratings we do have are enough
+data in order to do this search and make it work quite well. Now before we dive into how it works, we're going to do one little
+thing to simplify the error. So we talked about the RMSE. Well, there's a couple ways
+we can really simplify this. We don't care about the RMSE value itself. What we care about is
+finding the matrices. So, we're trying to decompose
+r = p sigma Q transpose. We want to find the matrices for
+which the RMSE is lowest. We don't really care about
+the RMSE value itself. So, the square root is monotonic. So we can just ignore
+the fact that a square root, the thing with the lowest RMSE, will also
+have the lowest MSE, means squared error. And similarly, since we know how
+many values we're computing over, N is fixed, we don't even need to
+do the average, so we can minimise SSE, which is the sum
+of the squared error. And that minimizes RMSE, gives us simpler formulas to work with. Second, we're then going to look at the
+squared error of individual predictions. We're going to look at
+each rating in turn, and we're going to look at its contribution
+to the overall sum of squared error, and that's going to be how we
+improve our estimates. The structure of the algorithm is that
+we're going to initialize our matrix, our item and user feature vectors,
+to an arbitrary starting point. It has to be non-zero. And in many setups, it must be random. Then, we're going to try to predict
+each rating in the data set. And use the error of
+predicting that rating and update rules derived from
+the structure of the prediction. To update our estimates of our item and
+user feature values for the next rating. And we're going to keep doing
+this until the process converges. And there's a few ways we can test that. One we can just say, we're going to
+run it 100 times and call it good. We can also look at how much our estimates
+change each excessive iteration and stop training once the change gets small. So we also simplify a little bit,
+so you remember the full singular value decomposition
+is R = P sigma q transpose. Or if we use a baseline predictor it's
+Plus B, which is our baseline predictor. Like user mean, item mean,
+user item personalized mean. What we're going to get rid of
+sigma just to make things easier. We're going to fold it into P and Q. So that P and Q will no longer have
+normalized lengths that's true for an orthogonal matrix. Their orthogonality is
+going to break anyway, it gives us few matrices to deal with. So we're going to use the predictor model,
+the rating equals the baseline predictor, plus user feature preference,
+item feature preference. Our scoring rule, to score a particular
+item for a particular user, We're going to add the baseline
+prediction for that user and item, to the dot product between the user
+feature value and the item feature value. That's our prediction rule, looks very, very similar to the SVD rule that
+we saw in the previous video. So with that, let's get into a little
+more detail of this algorithm, which is called FunkSVD. This particular approach to competing
+the SVD was pioneered by a researcher going by the pseudonym of Simon Funk,
+is a part of the Netflix prize. The idea that we train
+the features one at a time. So we've got these 40 or
+so latent features. We're going to train the first feature,
+then the second feature, and so on. We train the first feature until it
+converges then move onto the next. We ignore the missing values,
+we use this baseline predictor. So we're learning offsets from the
+personalized mean, not raw rating values. So, each update is computed
+using the following formulas. We first compute the error. Which is this epsilon sub ui, the error of predicting the user's rating
+for the item using our scoring function. We then compute changes or updates for that items value for
+the current feature. And that users value for
+the current feature. And these updates are the error times the other value, so for
+the item we update using the user value, for the user we update
+using the item value. Minus this additional term that
+does what we call regularization. Now we've got two parameters here. Lambda is our learning rate, which is
+how fast we want the model to converge. So if we look at how to do a search, we are here, we want to look for
+another value. We've got our derivative,
+it tells us to go this way. How far do we go before we
+try our estimate again? That's what the learning rate controls. If we go too far,
+then we're going to be really jumpy, and it's going to be hard to get to the best
+value, we're going to jump around a lot. If we go too slow, then it's going to take us many iterations
+in order to get to that best value. So it's kind of a balancing act. For a lot of data sets, particularly
+around the 10 million range or so, lambda = 0.001 is
+a good starting point. Gamma is what we call
+a regularization term. And what this does is it does the same
+thing as though bayesian damping for our damped means, we talked about
+way back in the first course. And what it does is it biases the learning
+process against extreme values, very large deviations computed from
+the user and item feature values. Because we need a lot of evidence
+to support an extreme judgment, that yes this item and this feature just
+really increase the rating by a lot. And so what this does is,
+it penalizes large values. If we have enough data to support
+a large value, we can still get one. It'll overcome the penalty. But it encourages the values to be small
+unless the data really suggest a very strong, a very large value. So these updates come from the derivative
+of the squared error with respect to the user or an item feature values that
+contribute to the current prediction. And then we use that derivative to in,
+a the Gradient assistant technic. So find the value,
+the matrix values that minimize the error. Now, this process does
+come with one huge caveat. It is no longer a true
+singular value decomposition. In particular, P and Q, not orthogonal. So if you saw the folding
+in technique that we used, the true singular value decomposition,
+and went, that's really cool! Well I hate to bring bad news, but
+it doesn't work with a lot of these trained matrix factorizations,
+because P and Q are no longer orthogonal. So the math that makes folding in work,
+no longer works. So to make this a little more concrete,
+here's the pseudo code for the algorithm to train this model. What we first do is we
+initialize the matrices. Since we are going a feature at a time, we can initialize all the matrix
+values to the same value. Say P Q equals 0 point 1, it'll work. There is alternate framings where we have
+to initialize them to random values. We iterate over
+the features one at a time. And then for each feature,
+we train that feature until convergence. And as I said, there's a couple of
+different convergence criteria we can use. One is the change in
+the estimates is small. Another is we ran 100 times. Then within each of these training loops,
+and we call each pass through the training
+loop an iteration or an epoch. We then loop over the dataset. And for each rating in the dataset,
+we try to predict the rating and we update our estimates based on
+the error in predicting that rating. Using the update rules
+on the previous slide. Now, the fact that we update after
+each data point is what makes this stochastic gradient descent. For ordinary gradient descent,
+what we would do is we would loop over the data set computing all of the
+changes but we wouldn't update right away. Then at the end of the pass to the data
+set we would update our parameters and go again until convergence. Stochastic gradient descent is
+not as formally well behaved but it generally works very well. And it doesn't require nearly as many
+epochs in order to converge to good values for our p and q matrices. So that is the basic algorithm for
+doing this training. Once we have the matrices,
+the final computations are the same. We don't have the explicit sigma matrix,
+so there's one less multiplication. But the basic computations
+are the same as they are for the singular value decomposition. There are a few alternatives
+to gradient descent, one is we can do all features together
+rather than going a feature at a time. As I said, you have to randomize your
+starting position if you're doing this. There's a number of other
+optimization approaches that work. Least squares or alternating least squares
+methods, expectation maximization. In general, any optimization
+method is going to be applicable. Different ones are going to work better or worse for
+different kinds of recommendation models. But the basic idea of we have an error,
+let's learn parameters for some kind of a recommendation
+model that minimize that error. Carries through to a lot
+of commendation techniques, and a lot of machine learning
+approaches in general. And we're going to see some more of
+these techniques throughout this course. In conclusion, gradient descent allows us
+to efficiently approximate the singular value decomposition and other matrix
+factorizations from known data. There are many different models that you
+use similar methods that we're going to see more of throughout
+the remainder of this course.

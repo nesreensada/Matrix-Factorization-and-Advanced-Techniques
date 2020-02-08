@@ -1,0 +1,296 @@
+Welcome back. In this lecture, we're pleased to
+bring you Anmol Bhasin from LinkedIn to talk about how recommenders work in
+large scale industrial deployments. Welcome to the course, Anmol. >> Thank you, Michael. Pleased to be here. >> So at a high level, what does
+recommendation look like at LinkedIn? >> At a high level, LinkedIn has
+multiple types of recommendations. We recommend people,
+we recommend jobs, groups, companies. In addition to that,
+we have news articles. So if you look at the whole ecosystem,
+LinkedIn has had to take an approach which is more of
+a platform approach to recommendations. In the sense that we do not necessarily
+build one particular product, but rather go with a platform approach. In that setting, the bottom line
+of the LinkedIn infrastructure is this shared infrastructure layer
+where we do a lot of feature extraction, and resolution and metadata enrichment. And we also have technology to
+do matching between two items, or a user and item, which is very useful
+in a content-heavy recommend system. And all of this happens in
+the Hadoop layer that we have put together, which has a couple
+of thousand machines at LinkedIn. On top of that, we've built these reusable
+components for content filtering, collaborative filtering, popularity based
+recommendations, social recommendations. Which we put together in
+an algorithmic selection manner, in the sense that a particular member,
+context, or a product, makes a combination
+of these to surface results. And then we hide it behind an API. So essentially, for
+the users of the system, they are talking to this particular API, and
+the magic is happening behind the scenes. On top of that, we have an AB testing
+layer, because AB testing is so inherently crucial to
+good recommended systems, because there are multiple algorithmic
+variants running at any given point in time that need to be surfaced, or
+tested, in different contexts. And finally, on top of this is,
+sort of this huge spectrum of products, as you can see on the screen, that
+essentially are built on this platform. The point I want to send
+across is the fact that LinkedIn uses a very hybrid
+mechanism to do recommendations. As I described previously,
+if you looked at the LinkedIn homepage, there's this big news feed. And if you think about it,
+that's actually a recommender system. At the surface, it looks like these
+are updates coming from your network, but essentially there's a whole
+lot of stuff in that stream. If you think about news articles or
+jobs that get posted, all of them become a part of the stream. And it's a hybrid recommender
+with heterogenous item sets. So what we essentially end up doing is
+we take these four types of recommender algorithm families, social, popularity,
+collaborative filtering, and content. We take candidate pools from
+each one of these approaches and then throw it into a response
+prediction system, which essentially optimizes for
+one of the metrics. And it could be click through rates,
+it could be revenue, it could be follow rates or
+connection rates in social networks. And all of these sort of objectives can
+be paired with some kind of constraints. Like in the sense that if we
+had news articles on LinkedIn, that LinkedIn surfaces,
+meaning they are sourced by LinkedIn. So a certain portion of the traffic
+should go to LinkedIn pages, and a certain portion of
+the traffic should go offsite. So that's a constraint that you can burn
+into your optimization function right in this blue predict response box. So that's pretty much how
+LinkedIn does recommendations. >> So I see a number of different
+algorithms that you have running here. Is the important thing in your building
+the LinkedIn recommenders figuring out a bunch of algorithms to work with? Or is there a lot of
+interesting things going on with the features of those algorithms
+are doing their computations over? >> That's a great question. So I want to point out that we believe
+the magic in recommender systems at LinkedIn is in the features,
+and not necessarily in the models. The models that we use are pretty
+much off the shelf logistic regression or SVD for
+collaborative filtering or sort of trending articles or trending
+items in a particular piece of time. But what makes them great is this
+immense data set that LinkedIn has as a result of our members
+providing their profile data. And also a lot of behavioral activity
+happening on the site where people interact with the site in different ways. Let me give you an example, and the
+context here would be job recommendations. Obviously, when you talk about jobs,
+titles or companies or industries are important, but one thing that often
+people don't think about is locations. So it is one of the most crucial
+things when you think about jobs. And so
+if you look at a LinkedIn profile, and I'm taking an excerpt
+here from my profile. I moved from Buffalo, New York to the San Francisco Bay area
+right after finishing my graduate school. And if you think about this in aggregate, what happens is you can establish these
+patterns of how people are migrating between two locations,
+across the globe in some sense. And if you start incorporating this
+transition data into your recommendations, especially for jobs, we've actually
+seen tremendous amounts of upside. In fact,
+I'm listing here that we've seen about 20% lift in views, viewers and applications
+on our job recommendation system. So that's a classic example where
+the magic is really in the features. >> So with jobs, the feature
+extraction seems fairly obvious because when you list your job on
+LinkedIn you say where it was. But it seems that for
+a number of other types of items, the features are not necessarily so
+obvious. So if you're trying to set up
+a new recommendation product, how do you get the features that you're
+going to build your recommender on and train up a model that seems
+like it's going to work? >> Another fantastic question. So this happens all the time. I mean, at LinkedIn, I mean, we have tremendous product managers
+that think about new ideas all the time. And they turn to the recommendation
+systems team saying can you build out a recommendation for this particular item in this context and
+that will show up on page X? And it's a hard problem. But fortunately, in the modern day,
+we have this term called crowdsourcing. And so
+we use crowdsourcing pretty extensively. To illustrate the point, if you think
+about we having this new product idea. And necessarily speaking, we do not have
+any kind of labeled training examples. So essentially, what we end up doing is we
+take a bunch of these, Training points, which is some kind of interaction with
+this item in another context by this user. So, let me give you
+an example of how this works. If you want to build a new news recommendation system that would
+go on the right rail of the page but people have interacted with news on other
+pages on the site, you can take this data points from our logs,
+send it across to cloud sourcing, get labeled data from this
+cloud source data set then, throw it into your learning algorithms or
+infrastructure. Whether it's Mahout, or if you do it R,
+depending on the size of the dataset, do the prediction, and
+send it back to the cloud to essentially then get
+a qualitative evaluation set. We do this particular
+process multiple times. Primarily to get to a minimum
+viable product, and once we have a minimum viable product
+we throw it into sort of an a-b testing framework to see how
+the population is reacting to it. And in many, many cases, you know, you
+have to go back to the drawing board and think about well maybe that doesn't make
+sense, these kinds of features that we've extracted so far are not enough to
+even create a minimum viable product. And so, this cycle sort of goes back and
+forth until you are happy somewhat with the quality and
+then the product goes on to the site. >> So,
+going in a little bit different direction, so you've got these different
+recommender algorithms. The individual components that
+operate on their features and produce recommendations for a product. For a given product, you have say one jobs recommenders that's
+producing jobs for everyone or do you have to further target your recommendations
+strategy differently for different people? >> So, the way I think about it is that
+we need to have different strokes for different folks. Essentially at a website like LinkedIn or
+if you talk about any sort of major industrial website where
+the population is very diverse. For instance, we have people who
+are students or members who are students. They are executors, they are doctors,
+they are engineers, they are nurses. And in that setting what essentially
+ends up happening is that one size doesn't fit all. So the algorithms that We
+build out of the algorithm families are sort of consistent, let's
+say you talk about job recommenders and job recommenders, we use one particular
+approach of doing job recommendations because over the years we figured out
+that's the best approach of doing it, which happens to be a hybrid between
+social and content but when I talk about models meaning what models that get
+used in this algorithm families. That is not consistent for every member. In the sense that we use
+different features as well as different model coefficients for
+different populations and another example to cite here
+would be international users. In some sense, location is very important
+if you lived in the United States. Some parts of Europe,
+location is not that important. So essentially, depending on the demographics of the user,
+we can alter the model. But I think a subtle point here is that
+if you were to fit a model per user, that's prohibitively expensive. However, if you take segments of users,
+people living in Europe or doctors, and
+start sort of tuning your model to this segment of the population,
+that becomes relatively manageable. And so there are a couple of approaches
+to doing this, and one of the approaches that we use pretty extensively is
+to learn these interaction splits. And when you talk about interaction
+splits is the fact that, let's say for a job recommendations, locations, and current title are important for
+doctors whereas for students, locations are not that important primarily
+because students when they graduate they move to different parts of the country
+to find the right opportunity. So, what we end up doing is learning
+these sort of correlations or interactions between these features
+let's say, location and current value. And then learn splits of the data. In the sense that in this particular
+example, if you look at it, there are two features that we've plotted which
+plotted against the average prediction. And the value of feature X1,
+it still turns out that X2 interacts. So, effective X1 is
+very strong if X2 is 0. And that you can see it
+in the plot right here. So, we can learn a split model where we
+look at the value of this variable X2. Let's think about location, for instance. And then depending on the value of X2,
+we actually split the model. This sort of becomes a binary
+interaction feature, or indicator variable, if you will. And that indicator variable tells you
+which side of the tree you want to go. The, the models that I'm, I'm plot
+sort of showing here are, you know, generalized many models. And then, these interaction splits
+can be applied multiple times. I mean, if you have hundred such
+features you can learn this structure in your data set. And this is pretty much sort of
+the machine learned we are doing this. There are multiple ways of
+thinking about this problem. You can think about learning decision
+trees if you will where certain variables, or to be particularly
+precise about, let's say locations. If you are in the US,
+let's apply this model. If you are not in the US, let's build
+another set of families and models. And this captures the subtleties of
+different segments of the population. And this has the benefit of not having
+to fit multiple models for different segments of the population, which suffers
+from the problem of sparsity of data. For instance,
+if you had a set of users in some remote part of the world where we do not have too
+much interaction data to learn models. You can actually go to this
+particular approach where all the common features are used to learn
+these models but then these subtleties or [INAUDIBLE] about this segment of
+the population are captured very well. >> So, finally,
+how do you test all this to see whether a new recommender is actually
+providing value for your users and for the business, or
+just wasting time under dupe cluster? >> I think that's the eternal question. Okay, let's talk about it in two contexts. One, when you learn these models, essentially there are quantitative
+evaluation metrics around these models. And these effectively are the flavor of CV-Errors across validation errors,
+a Precision @ K or AUC and RMSE and the whole family of
+qualitative valuation of models. When you are fitting them. Fortunately or unfortunately. I should say unfortunately did the
+>> Metrics. If your AUC bumps or you see
+an improvement in your AUC measure, or RMSE that may, or may not correlate
+to what you will see on the website. There are multiple reasons. I mean, one of the big
+reasons is presentation bias. Essentially, the items
+that don't get shown don't necessary fare that well,
+even in your modeling sense. So, there's a difference between
+the way items get presented to the learning system in
+an offline setting and items get presented to the user for
+them to interact. There are other sort of
+subtleties going on, like things like you are doing
+impression discounting. If you've shown an article multiple times,
+you'll probably take that article out or discount its score and those are not captured when
+your learning model's offline. So, this is one of the big reasons
+why this correlation doesn't exist. Or if it exists,
+it's actually rather weak. So, you end up A/B testing. Once the model has proven its
+worth in an offline setting and you have your metric of choice,
+call it AUC or RMSE has shown promise. What you end up doing is
+you take this algorithm and throw it into an A/B testing framework. So at LinkedIn, I mean, I'm showing you
+a sort of a screenshot of what we do. This is our A/B testing framework and I'm showing you a fabricated test
+here just to show an example. If you look at the screen here, there are a couple of
+segments we've created. There is a whitelist segment,
+I just launched this model. I want to see how results
+look in production. So I plugin my member ID here and
+say, show me this new variant to me. And then once I'm happy, then I start ramping it to different
+segments of the population. In this setting, is the member a recruiter
+or is it a talent professional? And if any of these tags match
+which we have sort of, so these are attributes of members. And if each of these attributes match or
+in this setting, it's an or of all of these attributes, then take 10%
+of that traffic and show variant one, and 90% of the traffic in variant two and
+this is sort of a very common practice for almost any new feature or
+algorithm that gets launched. And I think the interesting
+part in the previous slide, I was showing you this particular orange
+bubble here is pointing at a hash ID and I think that's a question sometimes
+that what does this mean? Effectively, if you think about, we don't
+necessarily run one test at a time. We are running thousands of tests on
+websites like LinkedIn or Facebook, or Twitter, or Google and
+you name your favorite one. So, what happens is that these tests
+sort of interact with each other. And to give you examples, let's say, you have one test that is changing
+the way the results look. Meaning, you have a logo of
+a company starting to show right next to the company follow. I mean, I'm doing a recommendation of
+following these particular companies. On one treatment, I have company logos and another treatment, I have pure text and
+that's experiment one. Another experiment that's running
+simultaneously is essentially changing the way, the recommendations are done. So, we have another algorithm and
+they sort of interact with each other. So, it's very hard to tease out what
+effect is one having versus the other. So, what we end up doing is we
+run these orthogonal tests. So we take a member and sort of spread
+them using different random hash seeds, so that it is not necessary that
+there's a strong correlation between these two tests or
+there's strong interaction between those tests even though
+the interaction does exist. We can quantify the interaction and this is called lazy orthogonal
+multivariate testing. Another aspect of this is novelty effects. Every single time you have a new
+algorithm, people interact with it. I had a very interesting story once
+told about a major search engine where they broke the,
+I think the what the broke was, I mean, the search results became so bad and
+the interaction went through the roof primarily, because people
+were not very excited about or sort of intrigued about
+what really happened here. I mean,
+it used to work very well til yesterday. And today, it's look horrific. So, this is effectively what
+is called the novelty effect. So if you look at the visual here, I mean, the point I'm trying to make is that there
+is a boiling period for these experiments. You launch the experiment and
+let it run for a few days, and then start measuring your metric. Another interesting thing, especially if
+you're talking about social networks or testing these out on social networks,
+there's a pretty strong network effect and let's take
+an example of what does that mean. Let's say,
+I was sharing an article on my network. So essentially through a social recommend,
+this article and let's say, both you and
+me are connected on this network. Through my social recommender,
+this article will be surfaced to you. But if I was running
+a purely random A/B test, you may not be a part of that bucket. And in that setting, what happens is we end up destroying
+this whole sort of viral network effect. So especially when you're doing A/B
+testing in a place like LinkedIn, we have to keep into account that
+there is this sort of network or viral effect of the product
+that has to be accounted for when you're running these AB tests and then another interesting question
+that comes up over and over again. When am I sure that this test is actually
+telling me something in the sense that, as I mentioned, novelty effect is one
+of the cases that we sometimes end up making in wrong decisions that
+the metric that I'm trying to target. Let's us click through rate or
+movie watch rate say, Netflix scenario that suddenly,
+the algorithm changed and we started doing, the population
+started behaving differently. This fortunately can be tracked or
+fortunately has a solution and it comes from experimentation theory in statistics,
+and it's called power analysis. So essentially,
+what you end up doing is saying, I'm going to launch this
+new algorithmic variant or a new sort of you, I look and
+feel of my regular product and I want to see a 1.5% delta,
+let's say in my metric. So looking at the historical
+performance of your metric or looking at the variance in
+your metric back in time, you can actually figure out how
+much traffic do you need and how long to run this experiment
+to actually have your results being statistically significant and
+sustained. And once you have that, it's only then
+that we conclude the fact that yes, my test is now finished and
+the results that I have are now at least, I can believe these results and real
+protocols can be made as a result thereof. >> So if someone watching wants to go and
+test a recommender in their business or their product, they should go
+pay attention to statistics and think carefully about how to
+design the experiment well and not just look, it moved my number today. >> Absolutely,
+I think we call it death by 1,000 carts, because if you do not pay attention to
+the stats of setting up experiments for evaluating these algorithm variance,
+if you will. What ends up happening is we end up taking
+the wrong decision on the product and maybe it's novelty effect that your metric
+moved, maybe it's the fact that there's so much variance in your metric that
+this is just part daily variance. Maybe it's the weekend. So, you have to account for
+all of these sort of aspects while running these tests and
+evaluating your algorithms. >> So, anything else that you'd
+like our students to know about what build in recommenders in a large
+scale real system looks like briefly? >> Well, I think the one thing I'd like
+to say is the fact that recommender systems is a pretty diverse and
+dynamic field at this point in time, especially academic conferences are paying
+a lot of attention to this field. I think in the real setting,
+this ends up becoming a pretty exciting place to sort of
+blend all of these approaches that you learn in academic settings or
+in literature and then putting these products
+together is more often art than just the science behind the algorithms or
+the math behind the algorithms. So, that's the message
+that I'd like to send. I mean,
+if you're building up a recommender for yourself or your company,
+have fun doing it. It's like making a painting. >> Thank you. Thank you for being with us. >> Thanks a lot, Michael.

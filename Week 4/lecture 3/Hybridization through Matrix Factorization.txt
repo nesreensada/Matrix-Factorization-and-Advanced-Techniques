@@ -1,0 +1,159 @@
+Okay, welcome back. In this video, we're going to talk about
+a different approach to hybridization that does matrix factorization, a single
+algorithm on hybrid sources of data. We've seen a few different kinds
+of hybrid recommenders, and most of these recommenders have focused on hybridizing a single recommender out
+of multiple component recommenders. You might mix a content based filter and a matrix factorization collaborative
+filter or a nearest neighbor collaborative filter in order to produce
+your final recommendations. In this video, we're going to look
+at single families of algorithms, particularly matrix factorization, where we're going to be doing
+the hybridization at the data level. We're going to be performing this
+dimensionality reduction on what we call heterogeneous data, which is data
+of multiple forms, users rate items, users have demographic characteristics. Items have cast members, or
+genre descriptors, or things like that. We're going to see some specific examples
+of this in the interviews at the end of this module. This is going to provide the overview
+the high level framework and talk about a couple of the algorithms
+that do this kind of thing. Sometimes in the research literature this
+kind of work is called side information. So if we think about
+the big ratings matrix r. So we've got this ratings matrix,
+and we've got users, items, and they rate things,
+with stars or whatever. From a collaborative
+filtering perspective, that's our main piece of information and
+then we have this side information. Movie reviews. Restaurant menus. Whatever other information that we
+can obtain about the items that we're recommending, or about the users that
+we're going to be recommending them to, and we call this side information. And this is because it's additional
+information on the side that adds to what we have from our
+collaborative filtering dataset, the ratings matrix, or
+any kind of user item interaction matrix, such as purchase counts,
+play counts, that kind of thing. So, backed up just a little bit we saw and
+we're talking about matrix factorization. The machine learning approach,
+the learning models for recommendation. We define some kind of a cost utility
+function, this might be RMSE. That's what we did when
+we derive from K-SVD. We define a model such as SVD. R = P sigma Q transpose. We optimize the model parameters to achieve the best performance on
+our utility or our cost function. We can make many different
+kinds of models. The matrix factorization R = P sigma Q
+transpose, or PQ transpose is just one kind of model we can do, and
+we can use many different cost functions. So in the rest of this video, we're
+going to look at some additional models. You can train them using
+the same kinds of approaches. You can use the gradient
+decent we talked about. You can use expectation maximization. You can use various least square solving
+methods, depending on your cost function. There's many different training methods. In later videos, we're going to look at some additional cost functions that you
+can use in the matrix factorization. For now, we're still going to be operating
+in the RMSE matrix completion framework, if we want to do the rating prediction. But the same concepts can apply when
+you swipe out the cost function to optimize for something else and
+you can train these same kinds of models. This paradigm gives us basically
+a modular approach to recommendation. Well we've got the cost function,
+we've got the model, we've got the optimization strategy,
+and not all combinations make sense. But we can swap each of those components
+out to change how the recommender behaves. So to warm up, let's start by talking
+a little bit again about bias models. So we've got this bias model, baseline
+model where the score of the user and the item is a global bias which is
+generally going to be the mean rating if we're operating with ratings data. If we're operating with implicit feedback
+data, it's going to be something else. We have an item bias which
+is how much better or worse this item is than the average item. And a user bias, which is how positive this user is
+overall, compared to the average user. When we're doing rating prediction,
+this can personalize scores, but it can't really personalize rankings, because the only user base term is this
+bu, which is the same for all items. So it's basically going to rank
+items by their mean rating or their popularity or however we're
+computing that item bias term. We can learn this bias model
+using gradient descent. We can optimize these parameters
+to minimize the squared error predicting ratings. We can put it into a logistic
+regression to predict whether or not a user's going to buy an item. In that paradigm we can also
+then apply regularization but also we can just compute a mean. So b is going to be
+the user's average rating. b sub i is the average offset
+from the user's average rating. And then b sub u is the average
+of the offset from that. We can extend this to other
+kinds of linear models. Where we've got out baseline and this
+is just the whole baseline we just saw. And then we have coefficients for maybe what time of week it is which
+effects how much positive the user is. The genre,
+because some genres are more popular. And then may be the age of the user,
+we can throw some of these in there. We can also have interaction terms
+that may be we have user specific coefficient for some of these and then we
+can start doing some personalized ranking. And again, we can learn these parameters,
+in our machine learning terms, these coefficients are going to
+be the parameters, we could learn those using any
+of our optimization techniques. So, SVD++ is to bring this
+out extending our feature base to thinking into actually
+working with matrix factorization. SVD++ is matrix factorization
+that also takes into account whether or
+not an item has been rated at all. So traditional matrix factorization R = PQ transpose that only takes into account the rating values. We have no way in this training process
+to account for whether the user and the prediction process to encounter for
+what the user has actually rated. It kind of explicit feedback
+late in the rating matrix, this model here extends that paradigm
+to take it that in the account. So piece of you is our standard P vector,
+q sub i is our standard q vector, but
+we have these additional vectors that are the contribution to the user's
+preference for latent features. These are all latent feature vectors. That is account that we can infer from
+the fact that they rated some other item. So rather than encoding all of the users preference for features in the P matrix We split it into two components. We say that the fact that the user
+has rated a bunch of movies. The user watched Blade Runner, and
+they watched My Fair Lady, and they watched The African Queen. What this model does is it says
+that the fact that they watched those movies tells us something
+about their preferences. So what we do is we say that the y sub j that corresponds for My Fair Lady. What that does, we have one, what that does is it encodes what can
+we learn about a user's preference for the latent features from the fact
+that they watched My Fair Lady. What latent feature preferences basically are in common among all users
+that watched My Fair Lady? And we do that for
+all of the movies, and we then, p sub u,
+what it stars is the leftover feature, that the user's feature preferences
+that are not accounted for in their choice of movies that they watch. We train all these parameters,
+our baselines, our q, p, and
+now y matrices using gradient descent and now we have another way to incorporate new
+users, we might not know a P vector for user, but
+we know they've watched three movies. We can just take their y vectors for
+those movies, and use them to start doing
+recommendations for that user really fast without even
+needing to try to train a p vector. Provides a really natural way
+to incorporate new users, but it also allows us to kind of
+distribute out this knowledge of what the user's profile is,
+break it down some more, and take into account what movies have
+they even rated in the first place? So to take this further SVD, so
+one way we can think about this is that each user has a bunch of features,
+which is the movies they've rated. Basically, if you think about
+a user has a vector of movies. It's a one if they've rated the movie,
+a 0 if they haven't. You could do the same thing
+with purchase data, as well. Each of those features, the feature being I watched Blade Runner, or I watched the Iron Giant
+contributes a y vector to the user's overall preference. SVDFeature takes this a step further,
+and it says, okay, we have features about movies,
+or items, and about users. So, maybe this is a book that was
+published by Tour Publishers, it was written by a particular author, it's about dragons and
+those are all features of the item. So what SVD in a traditional
+linear model we'd say, okay, we're going to learn a weight that says,
+okay, this user likes dragons or this user likes Tour Publishers or
+whatever. In SVDFeature what we do is we say that, each of these features contributes
+a latent feature vector. So we kind of have two levels of features,
+we have the latent feature vector,
+like we have in matrix factorization. We do not know what those features mean. The first feature is, who knows what is
+actually means it's often very difficult to interpret what this feature means. But we have observable features as well, such as who wrote the book,
+what the books about. And what we say is that
+the observable features tell us things about the latent features. And so we can then, we're going to
+build latent feature vectors. Okay, this book has these
+particular latent feature vectors, this user has this particular
+latent feature vector. But what we're also going to
+do is we're going to push off a bunch of that latent feature
+information into the observable features. So we say okay, words of radiance has some
+latent features of itself, but it also has some latent features that we can know
+about it because it was published by Tour, because it is 1,200 pages,
+because it is high fantasy. And then when we get a new book that
+comes in, and nobody's rated it yet, we don't have interactions. But we know that it's published by Tour,
+and it's high fantasy and this one has 300 pages. We can already start building up some of
+the latent feature vector for this book. Let us start getting these
+latent feature vectors in a cold start situation a lot more easily. So the overall model looks like this,
+where the scorers come from a baseline scorer, and then, we have these user features,
+and we have item features. And there's a feature value,
+for that feature for the item it might be page count or
+one if it's about dragons, times a latent feature vector for
+that feature. We have the same for the user features. Then we also can break the bias down
+into individual feature components and this breaks down the matrix factorization
+problem into many different matrices. Now these features can come
+from any available data. We can take any data we have about the
+items, maybe the fact that this movie is rated PG, and it's 90 minutes long,
+and it's animated, and it has Brent Spiner
+doing one of the voices. Whatever features we have available
+we can use those to derive, to learn additional latent
+feature vectors and break down the factorization process based on
+the available data and then reassemble it. There's more techniques that do this. Generalized probabilistic matrix
+factorization takes the probabilistic matrix factorization that we looked at
+earlier and it integrates additional data. There's a variety of
+matrix co-factorization or collective matrix factorization techniques
+that process multiple matrices. You can hear a little bit more about
+this in a couple of later interviews. And there's a lot more you can read,
+we're going to put a few links particularly to the SVDFeature
+paper up in the resources.

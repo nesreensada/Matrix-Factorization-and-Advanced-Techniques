@@ -1,0 +1,130 @@
+Welcome back. In the first video of this module,
+we introduced the concept of learning recommenders, where we directly
+optimized a recommenders' parameters to minimize its error or
+maximize its utility. And there we talked about how not only
+can you optimize a recommender to have the lowest prediction error or to do
+the most accurate job classification but we can also optimize the recommender for
+its ranking capabilities. We can directly optimize for putting good stuff at the top
+of the recommendation list. What we also said that there are some
+complicated subtleties to it and we'll talk more about that later. This is later and to help us with this
+we have Daniel Cloover who is a senior PhD student in the Group Plans Laboratory
+and is also taking the lead on lens kits implementation of
+Bayesian Personalized Ranking. Daniel, welcome to the course. >> Thank you Michael. We're going to talk about Bayesian
+Personalized Ranking or BPR and the goal of this is to build a personalized
+ranking function for each user. And the reason we're talking about
+this algorithm in particular is it's the most popular Learning to rank method. That's a learning style recommender
+that uses ranking metrics, instead of a prediction base metric. And this is a key example of how Learning
+to rank algorithms tend to work. So the first thing you need to know about
+BPR is that BPR is not an algorithm. BPR is a loss function and
+some suggestions about optimization. But to build the full algorithm, you're
+going to need a model, a loss function, and the optimization as Michael
+said in the previous lecture. So the BPR family is a loss function,
+usually called BPR-OPT, that tries to approximate the AUC metric. This is the really clever bit of BPR,
+because as we're going to cover, AUC is not easy to optimize. Then it optimizes with a slightly
+modified stochastic gradient descent but a model is unspecified. So for an actual algorithm
+we're going to focus on BPRMF which is BPR ran over a standard
+matrix factorization model. Now before we cover that let's quickly
+review the AUC metric and ROC curves. So on the slide you can see an example
+ROC curve pulled off of Wikipedia. The way you get an ROC curve
+is you train a model and you specify a set of good items. And for each recommendation length you
+compute a percent of good items that were recommended and a percent of not
+good items that were recommended and you plot that as one point. And when you plot this over
+all lengths of recommendation, you get a curve connecting 0,0. You recommended no good items and
+you recommended no bad items, and 1,1, you recommended every good item and
+every bad item. And the ideal algorithm is going to go
+towards the 1,0 point on the corner here. Because the ideal algorithm
+recommends all of the good items, and none of the bad items
+at some given length. Now the AUC metric is normally
+used to summarize the ROC curve. It takes the area under the ROC curve,
+there we go. And reports that. Interestingly enough though, the AUC metric can also be taken as
+the percent of correctly ranked points. So if you have a data set D containing
+triples of the user and two items where we know that the user preferred the first
+item I over the second item j. We can take the percent of all pairs i and
+j for each user that are ranked correctly and
+that is also equal to the AUC metric. And you see in this equation,
+I'm using this syntax one bracket. That simply means in this equation, this term will equal one if
+the condition's true, and 0 otherwise. This is where it becomes difficult
+to optimize the AUC metric because this one function
+is very hard to optimize. It's not smooth. If you make a small change to the scoring
+functions, it's likely to stay 1 or 0, making it hard to understand
+if you've made an improvement in the algorithm or not. That's summarized here. AUC depends on how well
+the algorithm ranks items not how well it predicts
+ir computes a score. And it cannot be optimized
+by any standard techniques. So we need a well behaved approximation. So to do that, there we go. Let's focus on BPR's,
+optimization criteria. And to do that, let's change the problem. Instead of trying to assign
+scores through a score function, let's assign probabilities
+to a ranking function. So our goal is to learn a function P
+of i greater than j, given a user u. The probability that i
+prefers a user i over j. So theoretically,
+we could use any P function here. In BPR, we specifically use
+a logistic function, sigma. This is because we want to connect
+the P function to the score function S that we already know how to produce. And we do this through
+the logistic function. Now, you can think of this
+as a smoothed greater than. So, if we have our input x from
+let's say negative 5 to 5, we can plot it and it looks like this. When, we're greater than 0 it's most of
+the time, 1 and it closely follows 1. And when we're less than 0, it's mostly 0. But you'll see that if we have 0 here,
+we have a probability of one half. So looking at this equation at the bottom,
+if we have two scores that equal, we don't have a high confidence
+which one should be rank above and our probability of one half. If Si is higher than Sj, we'll be over
+here, and we'll report a score of 1. Likewise if Sj is higher, we'll be over
+here, and we'll report a score close to 0. Now the natural way to evaluate
+a probability function is called the log likelyhood. And what this is,
+is it's the log of the probability, that your probability function assigns
+to the data that you know it's true and the reason we use a log here is for
+numeric stability. It turns out when you have large datasets
+computing the probability generates very small probabilities that cannot
+be recorded well in a computer. By logging it we get a nice
+summation instead of a product and we get something that fits
+well in computer memory. So, the way we would evaluate a given
+probability function is the sum of the log of the probability designed
+to each point in the training set. Now let's look how this compares with,
+there we go. Let's look how this compares
+with the AUC metric. So earlier we saw this equation for AUC. The average of this indicator function
+which is 1 when the score is higher and 0 when the score isn't. Well because we're optimizing we don't
+really need to take the average. D is going to be the same
+size no matter what. So we can just look at the summation. Bring this in,
+we can say that the AUC is approximately this summation of the log of the sigma
+function that we saw a few slides ago, which is the BPR optimization function. Now there's a bit of a jump there,
+so let's look at that. This works if this log of sigma
+approximates the indicator function. And then this plot,
+you can see the indicator function. And log of sigma. Not a great approximation but
+it's close enough for optimization. You see that when the indicator function
+is high so is the log function. And when the log function is low
+the indicator function is low. The other thing you see here is that
+it's smooth, it's a continuous line that we can take a derivative of
+which is how we get to optimizing. So given this BPR
+optimization in a model for the score function we're
+ready to optimize. We're going to use gradient descent. So, generically where theta
+as any given parameter we have this equation which is a little
+small on this slide, I'm afraid. Which tells us how to perform
+an update for any given datapoint. And to do that, you need to take
+the derivative of your model. And since I do not like doing calculus,
+I have done that for you, and forgotten some minus signs. There, there, there, there, there, there. Cool. For the BPR-MF model,
+this is our set of equations. So you'll update the user feature
+based on this first equation, the first items feature on
+the second equation, and the second items features
+based on the third equation. For any given data point and
+you repeat this process for every data point until we reach
+some form of convergence. Now, before we can do everything,
+we need to talk about data preparation. Unlike a lot of other algorithms BPR
+does not train over standard ratings. It trains over user item item triples. So there's a lot of
+ways of building these. One is to have one item that the user's
+clicked on or seen or purchased and the other item hasn't. If you have ratings, you can take one item the users has
+rated 1, the user has not rated. And you'll end up a BPR tune
+specifically to recommend items the user's likely to watch. But you could also take two
+items the user has rated and take pairs where the first
+item has been rated higher. And you'll get recommendations
+tuned more closely towards items the user will recommend highly. Now, the last little detail here is the data order when you're
+doing the optimization. Training points taken in a random order. So a random user and then two random items
+that satisfy the criteria tends to be much faster than training points taken
+by user or item to the point where doing the normal thing, a for loop over user,
+a for loop over the items they've rated is going to lead to 10 to 1,000 times
+slower convergence of your algorithm. So tying up here, let's talk about
+other learning to rank strategies. There are many order learning
+to rank algorithms, but most of them follow
+the same workflow BPR used. Choose a rank metric. Identify what parts of that
+metric aren't smooth, and you can't take a derivative of. Replace them with close enough
+approximations and looking at a lot of the popular functions we normally use
+the logistic function that one over one plus e to the negative x function
+earlier as our close enough approximation. Once we have that approximation,
+we can then learn with gradient dissent. Thank you. >> Thank you, Daniel.

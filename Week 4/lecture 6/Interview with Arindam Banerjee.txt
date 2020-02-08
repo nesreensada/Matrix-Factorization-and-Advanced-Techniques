@@ -1,0 +1,195 @@
+Welcome back. We've been talking about matrix
+factorization techniques. And it's my privilege to have
+Arindam Banerjee here today to take us a step deeper as we look at
+multidimensional matrix factorization. So, Arindam is Associate Professor and
+McKnight Land-Grant Professor here at the University of Minnesota
+in Computer Science and Engineering. And he's here today because he's an expert
+in machine learning and data mining. And has been applying that to a variety
+of problems, including collaborative filtering, and including advances
+in matrix factorization techniques. Some of you who are in
+the data mining community may recognize that he was
+the program co-chair for SIAM's International Conference on
+Data Mining just a couple of years ago. But, welcome to our course. >> Thank you. Thanks for having me.
+>> So, as we were talking setting up for this interview. The real question that arose was, what
+can we do to improve matrix factorization techniques to bring back, what I'm loosely
+going to call content attributes or you could even call meta data. We know that content preferences are real
+and might help improve performance. We also know that one of the weaknesses of
+matrix factorization is that you end up with really hard to understand profiles,
+that the dimensions of the factorized rating matrix
+are rarely understandable. And so you were telling me about some
+ideas for, how we can think about this problem a little bit more generally,
+why don't you lead us through those ideas? >> Sure, yea. So when you think of the basic
+problem typically mostly people think about the user versus movie. There's a ratings matrix and
+that's how your data looks like. But if you really look at the data more
+carefully, you'll realize that you'll probably have some demographic
+information or other information. For the individual users you'll have
+information related to the movies, like the cast, the reviews,
+and other things, right? And if you just focus on the user
+versus movie ratings matrix, that one data matrix, you are missing
+out on these other attributes, the site information and
+the content that is there. So a more general way to sort of
+thing about is simultaneously take into account all these multiple dimensions
+as you are doing the factorization. And of course,
+the data looks much more complicated. So as you can see sort of
+in this schematic diagram. The yellow thing is your usual
+user versus movies ratings matrix. But the users are sort
+of at the bottom and they have demographic
+information jetting out in blue. And then the movies are along the columns,
+and then so there's reviews associated with the movies
+and there's movie cast and so on. So this is how your data
+really looks like, so the goal really is instead of just
+focusing on that yellow matrix. Can we take into account all of these
+as we are trying to do the matrix factorization? And that's sort of this
+multiple dimensions, and doing a collective matrix factorization. >> And so then,
+we're going to start by modeling the way these various
+dimensions come together. Why don't you walk us through
+this in a graph representation? >> Right, so one way to think about this
+kind of a data is on the left hand side we have some things like viewers,
+actors, movies and review words. So this is sort of what will be used for
+the reviews. So these are the entities in some ways. And the relationship between
+sort of a viewer and a movie is a ratings matrix right. And now if you pay attention that
+if a viewer is actually rating individual actors in a movie,
+that will be a viewer actor movie ratings. It will be multiple matrices, where every
+ratings matrix corresponds to one actor. Now, if you look at the costing matrix, that's a relationship between
+the actors and the movies. So, that’s a matrix connecting movies
+with the actors participating in it. Then movies and review words
+are connected by their reviews, viewers are connected to demographics. So, this relation graph essentially
+with entities on the left-hand side and relationships on the right-hand side. Sort of, and you can draw it based
+on what kind of data you have. So that it's fully laid out,
+you know what kinds of things you have. The righthand side things are usually
+matrices, the lefthand side thing are indices of those matrices
+of the sides of the matrices. >> So just as an example,
+if we were going to add in genres. We could have those as entities and we
+might have a relationship that movies have genres but we also might have that viewers
+have expressed a preference for genres. >> Exactly, that's a perfect example. So we'll have one entity on the left
+hand side which will be genres and the movie and genre will connect
+to that matrix with just. And similarly for viewers,
+we can have that as well. >> Right, and as you pointed out, this can allow some fairly
+sophisticated relationships. So, one of the things that our typical
+systems don't allow is saying g I liked Sandra Bullock in
+a particular movie and of course I'm in the blind side but
+I didn't like her in a different movie. >> Sure. >> And
+that type of deep rating relationship of course requires some challenging
+interfaces to get people to express it. But if you're mining reviews, you may
+very well get that data as a byproduct. >> Yes, and
+that'll be sort of a very rich data. So, in this case, it'll be the viewers
+are actually rating the individual actors in movies and
+that's difficult to do, but they often express those thoughts in their
+reviews as well and we can extract that. >> Wonderful. So before we actually
+go through this graph, one of the things we're going to talk
+about is that you've actually done this. And probably be useful to take
+a few minutes to just talk through, what does it mean to take
+multiple matrices like these and factor them together so
+as to come back with a better model? >> Right, so what we usually do is that is
+let's say you have an entity like a movie. And then when you're looking at
+just the movie versus user matrix, the ratings matrix, you get a latent
+factor or representation for each movie. Now when you have multiple such
+entities and relationships, the movies will still have
+this latent representation like as a vector as you said those
+dimensions are hard to interpret. But every movie will have sort of a maybe
+five dimensional vector representation. So, we will try to actually
+maintain this dimensionality across the various relationships
+movies participate in. And this will be true for every entity. And things become a little complicated,
+you are right. But we are simultaneously
+trying to factorize all of these matrices that have
+come up while constraining the individual latent factors to be
+the same across the whole relationship. Or only very, in a slight manner
+across the different relationships. >> So I'm going to try to echo this back
+and make sure that I understand it and. >> Sure. >> Hopefully that
+are learners understand it. What we normally have been doing is
+we have a two-dimensional matrix and the underlying latent dimensions we come
+up with are the optimal dimensions for reconstructing that two dimensional
+matrix at a particular rank. That's nice because it's optimal but it only counts two dimensions
+worth of information. If we now come out and say well
+what I have is users to movies and then cast to movies and
+we co-factor these. We're going to come up with different
+set of dimensions that allows both matrices to share
+the latent dimensions so that a movie in one has
+the same vector approximately. >> Yeah. >> Has a movie in the other. >> Yeah. >> It sounds like part of what
+we're going to end up with is a dimensionalization that's not as
+perfect for either matrix alone but that jointly is better and gives us the ability
+to bring those two matrices together. >> Exactly that's perfectly correct. And we simultaneously approximating both
+these matrices and that representation for every movie will be different for had we
+only looked at one of those matrices. >> So one of the questions obviously is,
+so does it work? So why don't you tell us how it works? >> Yeah.
+So I think in the literature now, there are many different
+models trying to do this. What we have shown in the plot over here. So our comparisons between PMF. Which stands for
+probabilistic matrix factorization. This is the paper that became popular
+during the Netflix competition, the PMF paper. And GPMF is a variant that we cooked up,
+which is a generalized version of PMF which can take into account these
+additional dimensions and factors. So in this particular comparison,
+as we are increasing the rank. We are showing how the performance
+improves where you have, just like Joe said,
+that you have the ratings matrix. And you also have the movie
+versus cast matrix and you're trying to sort of capture that. So as you give more rank, as you increase the rank you can see that
+the performance of this more fancy model. The GPMF actually keeps improving because
+it can take advantage of this additional information that's available in
+the cast and it can align that and can understand what types
+of movies the user likes. What kinds of people work in
+similar types of movies and so on. So there are been sort of a parallel
+development in machine learning, data mining, and other areas. So if you look for things like
+collective matrix factorization, there's a whole bunch of
+models that go by that name. Which try to accomplish similar things. And you should be able to find, you know,
+enough ideas on how to this can be done. But this is just one such
+idea that we worked on. And it definitely showed improvement. >> Well it's neat, because it shows
+both things on the same graph. It shows one that this is always better. Even though we're not doing the single
+perfect metrics factorization, having more data gives us a better result. >> Right.
+>> But what we're also showing is that the total amount of information in
+the system Is increasing because we're able to take advantage
+of more dimensions. >> Right.
+>> And obviously what PMF is showing is it
+gets worse is that it’s over fitting. >> Yes, exactly. >> Because it's used all
+the information it could possibly use. >> Exactly, its sees the [INAUDIBLE]. >> So the one other thing that comes out
+nicely from this is a little bit better hope of having some forms of content
+understanding and bring up both of these. From your work you had talked about
+how you could find cast clusters by identifying clusters of cast members. That had nearby vector representations,
+>> Right. >> Of this representation. >> Right. >> Can you tell us
+a little bit about that? >> Sure, yeah, so in the example that we are talking
+about you have a user by movie matrix. Which is like usual ratings matrix and
+the movie by cast matrix, which is sort of the new
+thing we threw in and then we are sort of looking
+at the joined factorization. So you are going to get this latent factor
+representation for every actor or actress. And then you can cluster them
+based on these five dimensional or ten dimensional representation. You can do just run around
+something like [INAUDIBLE] or do something more fancy to find
+clusters among the actors. So we looked at some of the results and
+some of it made sense so we found one cluster where mostly
+the science fiction actors got together a lot of Star Trek, you know Apollo 13. Ed Harris and Nimoy and so on. All of them grouped together. We found another cluster which is
+largely actors in the 40s through 60s. You know, Cary Grant,
+Humphrey Bogart and people like them. So so some of these actually, if you carefully start poring over
+the results, they make more sense and there's a better interpretability as
+to what may be going on over here. >> Well, part of the thing that makes
+this kind of analysis neat is that it can sometimes help you either back or
+refute intuitions. And so-
+>> Yeah. >> You look at the bottom there and Paul Newman actually did most of
+his acting after many of those people had stopped.
+>> Right. >> But there's this sense that he
+was a throwback to the type of actor of an earlier era. And what we can see is that if you
+look at the data of the movies that are liked by people and
+the actors that are in them. When we bring all of this
+together sure enough. He sits there along side Cary Grant and Humphrey Bogart as opposed to some of
+the actors who might have been later and part of a different
+generation stylistically. >> Yeah, that's true. >> And so none of this
+necessarily means that you have an easy time again describing
+what the dimensions are. >> That is true. >> That's always going to be a challenge
+with matrix factorization techniques. But you might have
+an easier time explaining some attributes of a movie that
+somebody would like because you can express it in terms of
+some of these content spaces. >> That is true and in some ways these
+clusters are post processed versions of those latent factors. So we did a clustering on those factors
+and then this is somewhat interpretable, but you're right that the dimensions of
+those latent factors are still difficult to interpret. >> So one last question,
+where is this type of technology in terms of the continuum from
+an idea in the research lab, out to everybody uses it in
+all of their systems today? >> So my sense is, and
+this is more coming from academia is that this has been explored quite extensively
+and there's lots of ideas out there. I think one challenge in
+adopting this fully Is that, first of all,
+as you throw in more types of entities. The data sparsity problem is exacerbated. You have just many more of
+these large sparse matrices. And then the scale of
+the problem increases. So you have to sort of come up with
+tractable algorithms which scale to the right things. >> So I think that's where things are, people are navigating their way
+through these, is my understanding. >> So it sounds like it's
+a technology to keep an eye on. >> Yeah. >> And it wouldn't be surprising if
+we start seeing some of the industry leaders jumping into these ideas, to try to ratchet their
+recommenders up a little notch. >> Yeah, I think so. >> Well, wonderful. Thank you so much for joining us. >> Thanks for having me. >> And we'll see you again soon.

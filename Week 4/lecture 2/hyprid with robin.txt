@@ -1,0 +1,184 @@
+Welcome back. You may remember
+Professor Robin Burke from the interview you heard
+earlier on the Entree system. And more generally,
+the find me knowledge-based recommenders. He's also an expert in the area
+of hybrid recommender systems. And so in this interview I'm going to
+ask him a bit more about the types of hybrids that are out there and
+how hybrid recommenders address many of the challenges that each individual
+algorithm presents on its own. Welcome back to our class, Robin. >> Hello. >> So you've written the definitive
+article on hybrid recommender systems. Could you just start by giving us
+an overview of what hybrid recommender systems are and
+what problems they address? >> Sure, so a hybrid is basically a system that's made up of two
+components of different types. So the Prius is a hybrid car, it has a gasoline engine,
+it has an electric engine. So in the case of recommender systems, every kind of algorithm has its
+strengths and its weaknesses. So for example, collaborate recommendation
+has a weakness in the cold start problem. If you have a new user who comes along,
+an item that nobody's rated, these are things that are difficult for
+the system to recommend. And so one thing that people have
+realized is that different algorithms can offset each other's weaknesses and
+can be combined in a given system. So that's the basic idea
+behind hybrid recommendation. In my studies, I looked at just two
+components, you could obviously put together more components, and it
+looked at components of different types. They're also hybrid systems or I don't know if you would call them
+hybrid systems but systems that involve multiple recommendation
+components of the same type. And I think of that as
+something slightly different. >> Great, so you actually developed a
+taxonomy to help understand the different kinds of hybrids. Could you review that with us? >> Sure, I think,
+the simplest way to think about it is what you have to do to
+the components themselves. So the simplest kind of hybrid
+you can have is one where you can just take the components as
+they are and use some black boxes. So for example, a weighted hybrid. With the weighted hybrid,
+you have two components that can do a score as to whether
+an item is due recommendation or not. And then you combine those scores in some
+way to come up with a final answer and then you give that to the user
+in terms of the recommendation. So I'm using the same components, I'm
+using the way as I would on their own but I just combined this
+course with the output. Another one along those lines is
+the mixed hybrid where you just present the results of the multiple
+recommenders side-by-side. That sounds like maybe it wouldn't
+be that useful but in PTV, which was a television recommender they
+wanted to have recommendations for every hour of the day in case you wanted to
+spend your whole life watching television. This was a little in the pre-DVR era. So they wanted and
+sometimes they wouldn't be able to make a, say collaborative recommendation
+of a particular slot but they could make a content-based one or
+something like that. So you would look at this
+list of recommendations and they may come from a variety
+of different algorithms. >> Let me stop you there for one second. Make sure that we get everyone understand. I'm going to use the example. We spent a long time touring Amazon. If we had a page at the front
+that had 20 items on them and five items were chosen from collaborative
+filtering using your profile and five were chosen through
+content-based filtering, and maybe five were chosen just because
+they're overall trending popular now. And maybe five were chosen some other way. That would be a mixed recommender, because we're mixing the recommended item
+lists together to create a larger list. >> Right.
+>> Is that right? And then for contrast, the weighted
+hybrid might be something that said, well, were going to get a score
+from zero to five stars from the collaborative filtering
+based on your profile. We'll also get a score from
+zero to five stars based on content filtering and mix them together. Maybe we say 60% collaborative,
+40% content, and resort and figure out which items
+to recommend, based on that new score. >> Right, that would be a weighted hybrid. >> Great,
+why don't we continue from there then? >> Okay, we'll keep going. So another thing you might imagine
+is that you have some way of telling which recommender is going to
+be better in a given situation. Maybe it has to do with some confidence
+thing that you can measure, maybe it's some other aspect of the user or the item
+and then you could use a switching hybrid. So you could say, well,
+my criterion says that this recommender is going to be better
+in this situation, so I'll use that. And I won't get any output
+from the other recommender. And so that's a switching hybrid. And then the last kind of black box
+recommendation technique is the cascade. And the idea there is, I have one
+recommender that's really pretty good, that maybe the output is not as
+fine-grained as I would like. So, instead of giving me 10 things that
+are ranked it gives me five things in one bucket, five things in another bucket. I know bucket one is better
+then bucket two, but otherwise the items are unordered. So, then I can have the opportunity
+to add another recommender just to fine-tune those individual lists. And so that's a cascaded recommender. And if you remember back to when I was
+talking about Entree that was actually sort of the hierarchical similarity metric
+was sort of kind of the inspiration for this cascaded hybrid we ended
+up using it in that situation. >> Okay, so to keep the analogy going
+to make sure we've got this clear for everybody. A switching hybrid, a really simple
+example if we keep the Amazon example going is, if you're logged in and it uses your profile with a collaborative
+recommender, but if you are not logged in, it goes and picks the most popular items,
+it could switch in that case. Obviously you have more sophisticated
+switching if you happen to know a threshold for, well, we're not going to do collaborative unless
+you have at least 20 neighbors, or we're not going to do content based until we
+have at least a certain number of ratings. And then the cascading hybrid, which is probably harder to get in that
+example, but I'll try, would be you might do something that many of us would
+think of as almost more of a search. That you'd come in and
+say I'm looking for something that goes well with the ice maker I'm about to buy. And so one thing might be
+a product association recommender that does a good job in figuring
+out are these associated but a lousy job in figuring out
+if they're good for you. And then you can take the things
+that are associated and pipe them through something that does a personal
+evaluation to give you the best choices. Is that a fair example of a cascade? >> Yeah, another one I was
+thinking of is you might, from a content-based point of view,
+know that a user likes a particular genre. >> So maybe you know that they like
+mysteries, but not well enough to know, say, maybe a specific text,
+specific authors. So you could pick a couple genres that
+you know they're going to like and then, do your collaborative
+filtering on top of those. >> Great, are there other types of hybrids-
+>> Yes. >> That we should know about? >> So the other ones are a little
+bit more complicated. Because they involve kind of
+reusing the recommendation logic as opposed to just using
+the recommendation component. So one example that's very commonly
+used is the feature combination hybrid. So the idea of feature combination
+is that I take features that we would normally associate with say,
+content, and I pretend that they're collaborative and I
+use them in my collaborative recommender. So a very common way to do this is
+to have what's called a pseudo user. I don't know if you've talked about
+that but you could for example, if you're doing books in our Amazon case,
+you could say authors. We have a pseudo user for
+different authors. So if like Stephen King, then there would be
+a Stephen King pseudo user. He loves all of Stephen King's books and
+doesn't like any other books. And I could have one of those for
+all authors that I have in the system. And then those can be treated just like
+regular users, they might be similar to, the Stephen King pseudo-user might be
+similar to you, if you like his books. And not, if you don't like his books. And then this gives you some of
+the advantages of having a hybrid. So if Stephen King writes another book,
+I don't have to wait for other people to rate it, I know that the Stephen King
+pseudo user is going to love it and that may be enough to
+generate recommendations. So it's feature combination in
+the sense that I take these features, the raw data that would be
+considered content data and pretend that it's collaborative,
+pretend that these are users. That's not the only way
+that you can do that. So you can do it the other way. So you can treat collaborative features
+as if they are front end features. You can do the same with
+knowledge-based recommendations. So, but that's a good example of feature
+combination and that's fairly common. >> And that sounds like something you
+could do, not just with individual authors but this might be a great place to
+incorporate something like genre. To say, well, if you like mysteries,
+then you might build up a good correlation with the mystery pseudo user or
+you like New York Times best sellers or Book of the month club selections,
+you might enjoy the other ones. >> Right, and one great advantage of
+it is that if you have a collaborative system and it works well you don't
+have to change anything about it. You're just adding these
+additional users to it. Okay, so that's feature combination. Feature augmentation says we're
+going to use the logic and the data for one recommendation component. But we're going to use it
+to generate a feature or a small set of features which then,
+another recommender is going to be used. So with feature combination, I take all the authors,
+all the genres something like that. But with feature augmentation I'm going to
+do some more processing with that. So one example is if I'm
+recommending say blogs. Maybe I have some content-based way of
+figuring out what language the blog is in. And so then the language feature
+then could be some pseudo user. I might not actually have individual bits
+of data that says language equals English, or Swedish, or whatever. But I might be able to figure that out. There are other examples. I know in the early Usenet recommendation
+there was a content-based set of methods for deciding whether
+somebody was a spammer or not. And then that information could then be incorporated into the collaborative
+recommendation part. >> Sure, we could even imagine doing
+a cluster analysis on authors, based on user rating data to
+create synthetic genres that could become features that were then used for
+a content-based recommender. >> Right, and so you could say, okay,
+some users might like popular authors and some might like unpopular authors. >> Sure. >> Yeah. Okay, so that's feature augmentation and then the last type is one in which the,
+so it's a meta-level of hybrid. And the idea of a meta-level
+hybrid is that the input to the main component is entirely replaced
+by the output of another component. And I think, again, a good way to talk
+about this is in terms of an example. So, if I have a content-based recommender,
+one of the things it maybe do along the way, if I'm using an algorithm like
+Naive Bayes or something like that, I maybe building up a profile of the user
+in terms of the thing that they like. So if we're talking about books again, I may have particular authors
+that they seem to like, other authors they seem to dislike,
+genres they seem to like and so forth. So I have a profile of
+the user in terms of math. I could turn around and
+take that profile, and use it for collaborative recommendation. So now I'm looking for
+users who have a similar set of likes and dislikes as measured in terms of these
+features, as opposed to looking for similar likes and dislikes based
+on individual items themselves, which is normal of how we think of
+collaborative recommendation working. So with the meta-level hybrid I
+take kind of what's learned or what's acquired by one algorithm
+in terms of the user profile and then I treat it as input
+to the next component. >> And I don't think I'm going to
+try to come up with a good Amazon example of that. So I'm going to put you forward and say, I mean obviously there's
+a lot of potential with these. I can see where addressing
+one set of weaknesses or circumstances where a recommenders
+is limited are good. What are the downsides
+of hybrid algorithms? >> So a couple things. I mean certainly when you're building
+you would have more algorithms so you have more pieces to the puzzle. Often times these are things
+that need to be tuned. That need to have data acquired for them. So definitely there's a drawback. There's also potential extra computational
+cost depending on the design. So in a weighted hybrid, for example,
+I have to run all my algorithms. And then add up their scores at the end so
+there may be some computations going on. And so those drawbacks do exist but my impression is that
+actually hybrids are very, very commonly used especially
+in practice because companies want to make use of
+all the data that they have. And so if they have some content data
+they want to figure out how to use it. If they are collecting information about
+users preferences in multiple ways, they want to use it however they can. And so for
+that reason I think hybrids are pretty common even though well, they do have
+some, there's some extra work involved. >> Wonderful, Will. Thank you for
+educating us about hybrid recommenders. It's been delightful talking with you. >> Okay, great to be here.

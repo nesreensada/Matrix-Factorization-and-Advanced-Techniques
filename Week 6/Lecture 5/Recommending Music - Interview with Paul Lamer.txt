@@ -1,0 +1,164 @@
+Welcome back. It is my pleasure today to bring
+you an interview with Paul Lamere, who is the Director of
+Developer Platform at Spotify, one of the well-known
+online music companies. And who has been working in
+the area of recommending music for pretty much as long as people have been
+doing work in recommender systems. And I'm delighted to have
+you with us today, Paul. >> Well, thanks for having me. >> So we've spent a lot of time in
+this series of courses talking about recommending, largely from
+the perspective of examples like products generally,
+sometimes news, movies. What's different about recommending music? >> Well, there's quite a lot of things
+that are different about music. Probably one of the biggest things is that people listen to music over and
+over again. So lots of people will have
+their favorite playlists, and every day they're just
+listening to that playlist. And so these people are often
+not really looking for a recommender necessarily to
+help them find new music, but to help them to improve
+their listening experience. So one of things that we do in
+Spotify is try to nudge these non-adventurous listeners to expand
+their horizons a little bit, so that they can enjoy the millions of
+artist that we have in the catalog. >> So interesting, so how does this reconsumption change
+the way you think about recommendation? Obviously, I mean most of the algorithms
+we have taught start by saying, we're going to find something we
+think you haven't experienced. But I get the sense its a little more
+sophisticated than just saying great, we can now recommend
+the things you rated highly. >> That's right, yeah. So at Spotify,
+we think a lot about the user. And we actually have bucketed users into
+maybe three or four different types. At one end of the spectrum,
+you have the hardcore music listener who spends a lot of their recreational
+time exploring for music. And at the other end of the spectrum
+is you have the casual. Or maybe even people who if music want
+away they would not even notice or care too much, who spend most of there time traditionally
+listening to music on the radio. So they essentially had
+a zero button interface. They left discovery
+totally up to the DJ and they weren't paying to much
+attention to what they're listening. So the bottom line is,
+there's no one perfect recommender for all of the people who use Spotify. So especially for these casual listeners, giving them a good listening
+experience by helping them re-experience the music that
+they already have Is important. So what we have ended up doing is
+building a set of different recommenders. So for the hard-core music fan
+who's looking for music discovery, we have something called Discover Weekly. And every week you get a list of 50 songs
+by artists you've probably never heard of. Or at the other end the spectrum,
+we have something called Daily Mix. Which essentially takes the music that
+we already know that you know and love, and maybe every fourth or
+fifth song will mix in something new, but something that's not too far away
+from something that you already know. So the idea here is we're trying build recommenders that serve all
+these different types of users. >> So within this, are you trying to model
+somebody's frequency of re-listening, either as an individual or
+at the song level? And I know I can remember, as somebody who
+doesn't listen to a huge amount of music, there were certain songs that you would
+hear and you'd realize even a radio station might play it twice an hour
+because people wanted to hear that a lot. But they didn't want to
+hear everything a lot. And some people probably
+got really annoyed. >> Yeah, [CROSSTALK] some studies
+looking at terrestrial radio. We have a metric called the Time to Katy Perry-
+>> [LAUGH] >> Which is on certain commercial radio stations, the average Time to Katy Perry
+is about 30 minutes that you'll have to wait for a Katy Perry song to come up. So yeah, certainly, and actually
+terrestrial radio provides a pretty interesting model that we can look at. because they've been playing music for
+people getting close to 100 years now. And they have a lot of experience with
+mixing in familiar music and new music. And generally speaking, they've found that repeating music is a great
+way to keep people listening. So yeah,
+we use a lot of that type of experience to model our recommenders that we're
+building for this casual music listener. >> And do you also do something
+particular to think about, is there a song to song transition,
+whether one song follows another? Or is it just more,
+are they part of the same list? >> Yes, it depends on the context. So we have a lot of technology that lets
+us do things to improve song transitions. So we have an acoustic analyzer
+that can look at an MP3 file and give us the tempo and the energy, and how
+acoustic it is and how danceable it is. And for
+a certain context like dance music or for running,
+song transitions are very important. So we have some parts of our
+product that will use that data to give you seamless transitions, or to give you a playlist that has
+sort of a traditional DJ arc to it. Where it might start slow, and then
+from song to song gradually ramp up in energy until you get kind of
+the everyone out on the floor dancing. Then you may have a few cool off songs,
+and then start the whole thing over again. >> Wow, so
+things get pretty sophisticated. So when you think about this, and we've been over the course of a series
+of courses here, taking people from very basic non-personalized
+recommendation through content, user-user/item-item collaborative, and
+then into some of the matrix techniques. Are there particular innovations
+in recommender systems generally that were particularly helpful for
+making music recommendations effective? >> Yeah, so
+the things that we are spending a lot of time now using some
+of the Word2vec models. Are you familiar with those? >> Sure.
+>> Google's been working on it. So we have one of our great data sources,
+our user created playlist. So people have on Spotify have
+created about 2 billion playlists. And these are really great sources of
+information about how people actually listen to music. Because these playlists have titles and they have sets of songs that
+people think go well together. So we can toss all these
+into Word2vec model and essentially position all of these
+songs in a giant vector space. And then we could just do nice,
+nearest neighbors kind of things for song recommendation. So we end up leveraging this really large user-built data to give us a really
+good song to song similarity. And that forms the basis for
+lots of our recommendations. But of course, the trick is
+then taking that similarity and then making a good listening
+experience out of it. Fixing in the familiar, the new, the serendipitous surprise, and
+doing some of the things you were talking about with trying to give
+good song transitions and all that. >> Yeah, it's almost scary. I remember reading an article, I think it
+was in the New Yorker in the past year, about people on the music creation
+side who are using some of these same sets of technologies to try to
+engineer the songs to fit in, and be sort of instant hits. And the whole idea that, well gee,
+if we know what a recommender is going to think goes with a set of listening tastes,
+and we know what the tastes that are most popular are,
+then maybe we can engineer the beat and the lyrics to fit in with what
+somebody wants to listen to. And I don't know, for me at least there's
+some mix here between art and scary. >> Yeah, I'm certainly a skeptic
+about that sort of thing. There's been,
+especially in the music space, there have been a number of companies
+who have tried to build hit predictors. And [LAUGH] I think that's
+a little bit of snake oil. >> Yeah, I think it probably is
+a lot harder to predict a hit than to predict something or engineer
+something that it's sort of going to at least hit the main
+stream at a mid-level. >> That's right. >> But
+this is true in the movie space too. Everyone's figured out that okay,
+Halloween 12 or whatever the next thing in a series is,
+will have a steady audience. It may not be a blockbuster, but you know that-
+>> Right. >> You can do worse than Star Trek 25. >> Right, so the funny thing about these
+hit predictors, they oftentimes will look like they're doing a pretty good job
+and they'll have a good track record. But especially ones that
+are driven off of acoustic data, it turns out that they often are able to, essentially classifying
+the producer of the music. And so certain producers will have certain mixing
+styles that are easily recognizable. And so music by a top producer
+oftentimes becomes a hit. So if you can recognize a producer,
+you've done that. But that probably is not a hit predictor,
+it's really just a producer classifier. >> No, and in fact it, the thing I was reading was more on the
+producer end of saying yeah, some of these great producers just know how to
+match to what people are looking for. But that may not require all the
+algorithms, that may be a good ear too. >> Yep. >> So is there anything else about recommending music that you think
+would be interesting to share? >> Yeah, so one of the biggest things
+that we've been thinking about, is contextual listening of music. So I think, unlike most other domains,
+music listening is highly contextual. So people will build playlists for
+working out. And then, build a completely different
+style playlist for studying, or another one for doing chores around
+the house, another one for a date night, another one when their
+friends are coming over. So identifying context, identifying
+music that works well in context, and then personalizing this music for
+you based on your taste, is something that we've been
+thinking long and hard about. So if we know that you tend to like 70s
+classic rock and you're going to the gym, we can give you some AC/DC and
+some Led Zeppelin. But if you're a hip-hop fan going to the
+gym, we maybe be giving you some Eminem. And if you happen to be a female
+17-year-old going to the gym, maybe we'll give you some Justin Bieber,
+or Ali J, or something like that. >> Well, you've just scared me off from
+going to the gym for the rest of the week. >> [LAUGH]
+>> But I think the whole concept of having the system recognize that context, and I'm still old fashioned in that I have a whole
+bunch of music sitting on the computer. Which now sounds old fashioned with
+playlists for here's a jazz party or here's whatever. And my major selector is random. >> [LAUGH]
+>> But, it's clear that I'd get a much better
+exposure if I uploaded these things and said, okay,
+now you can add things [LAUGH] to my list. And if I got that next step of it
+recognizing, wow, I got this for context. That sounds pretty cool. >> Yeah, so our phones are these, becoming these perfect context
+identification machines. They know when you're in the car,
+they know when you're running. They know where you are,
+they know who your friends are. They know your calendar. So it's actually kind of scary when you think about how much your
+phone knows about you. And that's one of
+the things we think about. We don't want to cross the creepy
+line in recommenders to say hey, we think you're going on your first date,
+here's some music. That may be something that you don't
+want your music service to know about. So, but understanding this context and then taking advantage of it is a pretty
+important part of what we're doing. >> Pretty cool. And if somebody wants to go be innovative,
+now that we're getting more devices that are reading your heart
+rate at the same time. It notices you're in the car,
+it notices your heart rate slowing down, it's time to wake you up. [LAUGH] And we'll pick the right music for
+the circumstance. And that'll be cool stuff. Well, thank you so much. >> Yeah, it's been my pleasure. >> Wonderful, thank you. And that's going to end
+our interview here.

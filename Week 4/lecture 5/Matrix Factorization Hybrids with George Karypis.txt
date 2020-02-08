@@ -1,0 +1,206 @@
+Welcome back. Today it's my distinct pleasure
+to introduce George Karypis. George is an expert in data mining
+algorithms and the tools for data mining and recommendation including
+a large number of libraries that he has developed and
+released in areas from clustering and analysis, but specific in recommendation. The SLIM top-N Recommender Library, and
+the SUGGEST top-N Recommender Library. He is a distinguished McKnight
+professor of computer science and engineering at
+the university of Minnesota. And in 2013,
+was the program coach here for the ACM Recommender Systems conference. But most important he is
+an expert in understanding the subtleties of how
+recommendation algorithm is may or may not match what they
+are supposed to do and so first and foremost, welcome to the class George. >> Thank you Gerald. You were telling me about some
+of the challenges of using matrix factorisation techniques for
+the specific challenge of generating top end recommendations, I think that
+might be a great place to start here. >> Sounds good. So method have been very popular and I would say last, almost ten years plus. Getting too old. And the reason they work very, very well they are actually very
+good at predicting a reading. In recent years there has been
+some work that's shown under what conditions can actually recover
+the model using matrification projects. And the basic principle
+of matrification is that assuming that the data is coming
+in from a low ranked model, right? And then if you observe
+a relatively small number of entries from the matrix that
+they're randomly distributed then, you can show a type of build you
+can actually recover the model. Okay. Now the problem with the top N
+recommendation is though that the data is not actually,
+the training data is randomly distributed within the use item matrix,
+but its very skew distributed, so the result when you actually try
+to estimate the low rank model, you know, that estimation I still fails. >> So,
+you're talking about this low rank model. The idea that might takes a really based
+on some small number of dimensions. You're saying that, the fact that
+the things I've readed are not random, but the things I've chosen to
+consume means that the model that we're learning is not an accurate
+model of my tastes overall, and can't apply necessarily equally
+well across all items as we go forward. >> Exactly.
+So the model that gets estimated can not
+generalize very well to the things that they are far away from the vicinity
+of the things that you have rated. >> Wonderful.
+Well, I understand that you've
+done some work that's shown. The practical effect of this on datasets. >> Yes so this is a,
+we did an experiment that is original. A multi step experiment to
+try to illustrate that. So, let me tell you guys
+through that process. So what we took is a, we took some of
+the interesting datasets out there. So we used the Movielands, Netflix,
+and Yahoo Music and for each one of those data sets, we synthetically
+generated a known lower rank model. While it's literally generating a lower
+rank model, now what I mean by that is that we created a 10-factor model for
+each one of those things in which the entries of the different factor and
+item factors were synthetically generated. Okay, so as a result,
+we had a low rank model that can construct,
+reconstruct the entire matrix, okay? Then, what we did is,
+we reconstructed the entire matrix. So, let's see a movements case, users by movies and
+then we selected from that matrix, the non zero entries that correspond
+to the actual non zero entries of the And using then that sample entries, that it would sample according to
+the non zero structure of the assets. We fed those entries through our
+magic compilation algorithm to try to recover the low rank model. And then the algorithm, I use the SDD. And it recover a low rank model. And then what we did is then we used the estimated low rank model now
+to complete the entire matrix. And then we measured how different is
+a ground tooth low rank The metrics from which the low rank model was
+used to generate against the metrics that was estimated as
+a result of estimated. As a result of applying the metrix
+completion on those observed entries. So that over there between
+the ground truth and. And the estimated model. And then we're trying to understand where,
+exactly, the error occurs. So when we did the second
+part of the exercise, you would say well look at
+the use of item digraph. And then for every user, would be
+the personalized run-walk with restart. So we start with the user
+in that item digraph. And then with equal probability we
+traverse each of its outgoing edges that connects to an item, and then from each
+of those items with a probability qual to how many users have rated an item,
+we visit one of the users and then from those users we go back to one
+of the items that those users have rated. So this is a very similar to the algorithm
+that Google uses to rank pages, but we'll do that thing when
+they use the item graph. And this is a personalized random walk
+with restart and they restart here. With certain probability from every
+node will go back to the beginning to the same user. And we follow the same traverse. So at the end of the day, what we compute
+from that exercise is a steady state of probability of visiting
+every node in that and that those contain both the user
+nodes as well as item nodes. And those stage say probability,
+they're a very crude approximation. You can think of it as some
+sort of a graph distance from the user to everything
+else in the graph. And the graph distance measures to allows
+to extend the multiplicity of the path and the length of the path in the graph. >> Before you go on,
+I want to make sure our learners catch two very important things
+that you've said already. One was that your method is based
+on this idea of creating these simulated synthesized preference models. If by going out there and creating the
+dimensions of preference, you have a set of consistent theoretical users,
+that we know their taste and therefore we know how they should
+rate each individual item. But you're overlaying that with
+the fact that you're actually sampling. From what real people actually looked
+at which is bias by popularity and other clustering effects that make it
+non-random over the whole set of movies. >> That is correct. >> And the second thing that I want to
+make sure everybody understands clearly is that you're creating this
+distance measure, this how far am I from any given movie using
+the movie lens example or any given piece of music in the Yahoo
+music example by using this random lock a way of saying on average
+how many hops is it if I'm hopping from me to the items
+that I've rated consumed. To the people who's consumed those items. To the items that they've consumed and
+so forth. Technically you're including this restart
+that is a mechanism to make sure that they were covering this whole space and
+not just traversing in one direction. And that by using that metric. We get the sense that there are some
+items that are pretty close to me. Because there are a lot of different
+items that I've consumed that connect to the same users that have
+also consumed those items. And there's other items that
+might be quite far from me. Because it's quite a long chain
+by the time you get from me. Through seven other people,
+that it takes for me to get to that item. Okay, so we have a measure of distance. We have a set of synthetic user profiles. Take us through the results. >> Okay, so then what we did is given
+that we have the measure of distance of the items, so
+we the items into ten different buckets. So the first bucket contains the one-tenth
+of the items that are closest to that user based on the personalized
+random based distance. The second bucket has items that are the
+next 10% closest to the user and so forth. All the way up in the tenth bucket that
+has the items that are the furthest away, okay. And then for each of those
+buckets what we're computing, we're computing what is the error between
+the ground truth data that we know from that lower ranked model for the rating
+that the user provided on those items. To the estimated rating. Why don't I just compute the difference
+and compute the error, right? So if we going to look at the moving
+chart over there which is the blue one in the plot. You'll see that the first six buckets,
+the error is very close to zero. In other words our estimated model
+from the observed non zero entries. Adhere to the moon lances. Actually it does a very good job in generating ratings that
+there are very accurate. Right, so they're very close
+to the ground truth data. But then what happens is when you
+look at the last four buckets, right so as the items become progressively
+further and further away from the user. You know,
+the error keeps on increasing, right? So all the way up the tenth bucket in
+which the root of means square error, which is, you know, what is applied
+over there, it's close to 1.2. And, and this is a, those are the i-tenth. And they are the furthest
+away from the user, right? And, and those are the items that the,
+the model, the low-rank model that the matrix
+factorization estimates, right? It gives very high error
+compared to ground truth data. So and a similar behavior happens for
+the other two data sets. Both the Netflix and Yahoo. And Yahoo is not quite as pronounced,
+but for Netflix it is. You know actually Netflix doesn't
+do a very good job in actually even reconstructing the very
+first full buckets. And then after that you
+know it gets even worse. And that has to do with the Netflix
+significantly [INAUDIBLE] that we use. >> So to pull this together,
+what you're saying here is that we're going to see significantly
+increasing error as we're looking at the items
+that are more and more distant. From the persons already consumed items,
+and that means if we're looking at the top end list, perhaps the thing where most
+worried about is the items at the top may not be at the top because they're really
+the things the person would like the most but rather because they're far away and
+just have a large error and that stood out more than anything that
+was accurately modeled in this model. Is there something we can do about this? Because we like matrix factorization
+algorithms, but we obviously don't want to get into a situation
+where the top end that we're seeing, is a bunch of things that look highly
+novel because they're not what I, usually consumed but turn out to
+be not things I would like either. >> Yes, we can, and, again, the solution
+to that is something which people have came up to it quite
+a few years ago empirically. And really the simple thing to do is just
+combine some of those methods, right? And so one of the thing that we did Is
+once we look at the previous chart in which we saw that the things that are far,
+far away in the personalized random walk. And those tend to have high error. Then what we really want to do
+is we want to penalize, right? So the simplest way to penalize something
+like that is to have some sort of a hybrid client function. In which something would be ranked
+high only if it has a high rating. Right.
+And same time it's closed with respect to that personalized. And a very straightforward way to do
+that is just multiply those cores out. And we did some experiments with that
+idea with the movie lance data set, and that chart that I'm showing over here,
+it's a little bit busy but let's focus a little bit on the blue
+one which are the first bar. And the red one which is the red bar,
+right. So the blue bar over there
+shows the recoiled n and for different values of n for
+1, 5, 10, so forth. When the movie lance data set, consider
+to medical physicians by itself has about recoiled it in or at 1 of about 20%. The personalized page rank, if I'm going
+to rank the items based on that and then recommend the top item from
+the personalized page rank, it's recoil is about 22, 23%. So a little bit better than the Now, if I take those two scores the one is
+a predictive rating from the model and the other one is a personalized
+page rank probability. And actually multiply them out and show
+the results, the items based on there, I get the full bar, the fourth bar in
+the chart which is the scion with circles. You can see that for the record at one, the performance gets close to about 30,
+30 plus. So, it's a significant improvement
+over both metrification and personalized page rank. And the same thing happens for
+different values of Now [INAUDIBLE] part over here is we can play our exercise
+not only with personalized page, we can combine different methods. For instance, we can combine
+the [INAUDIBLE] method with the result I get from actually doing a [INAUDIBLE] so
+this is called [INAUDIBLE]. And I get a combined method. And I can combine many of those methods. So then the take away method from here
+is that manufactorization works well as long as we ask it to estimate
+the rating for a particular item. In the vicinity that is
+somewhat nearby to the set of items that the user has rated or
+has liked in the past. And the further away we go from there,
+the performance degrades. And so we combine its ability
+to give us accurate ratings for those nearby items with a way
+of identifying what is nearby. [INAUDIBLE] Right? Then we can get a win win situation. >> So it does seem like there's
+a recurring message here as well, that there's no free lunch. That in theory, what we'd like to
+do is recommend items that are far away from what you know anything about. But that are wonderfully delightful and
+you'll enjoy them greatly. And we've seen this already. That the item,
+item recommenders don't tend to do very much recommendation of
+things that are very different. I think what you're
+telling us here is that, while the S-V-D recommenders
+sometimes do give us far away items on the top end lists,
+they're doing that at the cost of giving us items that they don't really have a
+good basis for telling us we'll like them. And as we're designing our recommenders we
+have to be very conscious of the tradeoff between recommending something that is
+different and recommending something we actually have any evidence that
+the person's likely to enjoy. >> Exactly. I mean, the further we go, you know, you make your recommendations
+on sparse and sparser data. So it's an issue of you know, what can
+you actually estimate at that point in time by relying entirely on that
+you know the rating metrics or what the user has bought in the past,
+or has clicked in the past. So the only way to reliably go far,
+far away, no not even term far, far away. Is if you want to somehow doing some
+additional piece of information. And this is where content
+based recommended systems or any other non rating data usually help. >> Wonderful. Well, thank you for joining us. It has been my pleasure
+to sit here talking with George Karypis from
+the University of Minnesota. Some of the work that you've seen here,
+he's in the process of publishing and we will put up links to to
+announce that to the course as we hear about these items being published
+if you'd like to learn more about them.
